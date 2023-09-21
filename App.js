@@ -1,6 +1,8 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+// import { useEffect } from "react";
+// import * as Font from 'expo-font';
 
 const Stack = createStackNavigator();
 const Spacer = ({space}) => <View style={{height: space}} />;
@@ -36,14 +38,21 @@ function RegisterScreen() {
 }
 
 export default function App() {
-  return (
+    // useEffect(() => {
+    //     (async () => await Font.loadAsync({
+    //         'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
+    //         'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
+    //         'Courgette-Regular': require('./assets/fonts/Courgette-Regular.ttf'),
+    //     }))();
+    // }, []);
+    return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen options={styles.navigationHeader} name="Home" component={HomeScreen} />
           <Stack.Screen options={styles.navigationHeader} name="Cadastro" component={RegisterScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
@@ -52,7 +61,7 @@ const styles = StyleSheet.create({
           backgroundColor: '#CFE9E5'
       },
       headerTitleStyle: {
-          fontFamily: 'Roboto-Medium',
+          // fontFamily: 'Roboto-Medium',
       }
   },
   view: {
@@ -76,17 +85,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     color: '#434343',
-    fontFamily: 'Roboto-Regular'
+    // fontFamily: 'Roboto-Regular'
   },
   standardText: {
     fontSize: 14,
     fontWeight: '400',
     color: '#bdbdbd',
-    fontFamily: 'Roboto-Regular',
+    // fontFamily: 'Roboto-Regular',
   },
   focusText: {
     fontSize: 50,
     color: '#88C9BF',
-    fontFamily: 'Courgette',
+    // fontFamily: 'Courgette-Regular',
   }
 });
