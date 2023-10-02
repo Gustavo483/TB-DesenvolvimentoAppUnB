@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "your-app-scheme",
     "name": "TB-DesenvolvimentoAppUnB",
     "slug": "TB-DesenvolvimentoAppUnB",
     "version": "1.0.0",
@@ -24,7 +25,10 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

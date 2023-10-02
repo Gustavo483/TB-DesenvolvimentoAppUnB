@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export default function Menu() {
+export default function Menu({nome}) {
     return (
         <View>
             <View style={styles.containerMenu}>
@@ -10,7 +10,7 @@ export default function Menu() {
                         <Icon name="menu" size={24} color="#434343"/>
                     </Text>
                     <Text style={styles.NamePage}>
-                        Login
+                        {nome}
                     </Text>
                 </View>
             </View>
@@ -20,7 +20,6 @@ export default function Menu() {
 
 const styles = StyleSheet.create({
     NamePage: {
-        fontFamily: 'Roboto Medium',
         fontSize: 20,
         color: '#434343',
         marginStart: 25
@@ -33,7 +32,6 @@ const styles = StyleSheet.create({
     containerMenu: {
         backgroundColor: '#cfe9e5',
         height: 56,
-        marginTop: 20,
         paddingStart: 16,
     }
 });

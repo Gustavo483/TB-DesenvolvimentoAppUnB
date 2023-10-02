@@ -1,21 +1,22 @@
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, View} from 'react-native';
-import Menu from '../../../components/Menu'
-import Input from "../../../components/Input";
-import Button from "../../../components/Button";
-
+import Menu from '../../components/menus/menuTopo'
+import Input from "../../components/inputs/inputPadrao";
+import Button from "../../components/buttons/buttonsPadroes";
 export default function Index() {
     return (
         <View>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <View style={styles.espacamentoMenu}>
-                <Menu/>
+                <Menu nome="Login"/>
             </View>
-            <View>
-                <Input placeholder='Nome de usuário'/>
-            </View>
-            <View style={styles.espacamentoInput}>
-                <Input placeholder='Senha'/>
+            <View style={styles.container}>
+                <View>
+                    <Input placeholder='Nome de usuário'/>
+                </View>
+                <View style={styles.espacamentoInput}>
+                    <Input placeholder='Senha'/>
+                </View>
             </View>
             <View style={styles.buttonEntrar}>
                 <Button color="green" texto="ENTRAR"/>
@@ -31,6 +32,10 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        marginStart: 20,
+        marginEnd: 20
+    },
     buttonEntrar: {
         alignItems: 'center',
         marginTop: 52
