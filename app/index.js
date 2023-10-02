@@ -10,6 +10,9 @@ export default function Page() {
             <Link href="/cadastros/cadastroAnimais" style={styles.link}>
                 <Text style={{color: 'white'}}>Cadastro de animais!</Text>
             </Link>
+            <Link href="/user/showUser" style={styles.link}>
+                <Text style={{color: 'white'}}>Tela de User</Text>
+            </Link>
         </View>
     );
 }
