@@ -13,6 +13,9 @@ export default function Page() {
             <Link href="/user/showUser" style={styles.link}>
                 <Text style={{color: 'white'}}>Tela de User</Text>
             </Link>
+            <Link href="/user/createUser" style={styles.link}>
+                <Text style={{color: 'white'}}>Registrar Usuário</Text>
+            </Link>
         </View>
     );
 }
