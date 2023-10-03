@@ -1,4 +1,5 @@
-import Index from "./src/views/autentication/Login";
+import Index from "./app/autentication/login";
+
 export default function App() {
   return (
     <Index/>

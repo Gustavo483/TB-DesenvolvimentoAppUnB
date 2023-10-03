@@ -1,21 +1,152 @@
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, View,Text} from 'react-native';
+import {StyleSheet, View, Text, Pressable, ScrollView} from 'react-native';
 import Menu from '../../components/menus/menuTopo'
 import Input from "../../components/inputs/inputPadrao";
-import Input2 from "../../components/inputs/teste";
+import DefaultCheckbox from "../../components/inputs/checkboxPadrao";
+import DefaultRadio from "../../components/inputs/radioPadrao";
+import {useFonts, Roboto_400Regular, Roboto_500Medium} from '@expo-google-fonts/roboto';
+import * as SplashScreen from 'expo-splash-screen';
+import React, {useEffect} from "react";
+import * as ImagePicker from "expo-image-picker";
+
 export default function Index() {
+    const [isReady, setIsReady] = React.useState(false);
+    const [image, setImage] = React.useState(null);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+
+    useEffect(() => {
+        SplashScreen.preventAutoHideAsync()
+            .then(() => {})
+            .catch((e) => console.warn(e));
+    }, []);
+    let [fontsLoaded] = useFonts({
+        Roboto_400Regular,
+        Roboto_500Medium
+    });
+
+    if (fontsLoaded && !isReady) {
+        setIsReady(true);
+
+        SplashScreen.hideAsync()
+            .then(() => {})
+            .catch((e) => console.warn(e));
+    }
+
+    if (!isReady) {
+        return null;
+    }
+
     return (
-        <View>
+        <>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <Menu nome="Cadastro de Animais"/>
-            <View style={styles.container}>
-                <Text style={{marginTop:10, marginBottom:10}}>Tenho interesse em cadastrar animal para:</Text>
-                <Text style={{fontWeight:"bold", fontSize:20}}>Ajudar</Text>
-                <Text style={styles.label}>NOME DO ANIMAL</Text>
-                <Input placeholder='Nome do animal'/>
-                <Text style={styles.label}>FOTOS DO ANIMAL</Text>
-            </View>
-        </View>
+            <Menu nome="Cadastro do Animal"/>
+            <ScrollView>
+                <View style={styles.container}>
+                    <Text style={styles.headerSelectionText}>Tenho interesse em cadastrar animal para:</Text>
+                    <View style={styles.rowContainer}>
+                        <Pressable style={styles.standardButton} /*onPress={() => navigation.navigate('Cadastro')}*/>
+                            <Text style={styles.standardButtonText}>ADOÇÃO</Text>
+                        </Pressable>
+                        <Pressable style={[styles.standardButton, styles.inactiveButton]}>
+                            <Text style={[styles.standardButtonText, styles.inactiveButtonText]}>APADRINHAR</Text>
+                        </Pressable>
+                        <Pressable style={[styles.standardButton, styles.inactiveButton]}>
+                            <Text style={styles.standardButtonText}>AJUDA</Text>
+                        </Pressable>
+                    </View>
+                    <View>
+                        <Text style={styles.headerText}>Adoção</Text>
+
+                        <Text style={styles.label}>NOME DO ANIMAL</Text>
+                        <Input placeholder='Nome do animal'/>
+
+                        <Text style={styles.label}>FOTOS DO ANIMAL</Text>
+                        <Pressable style={[styles.containerCenter, styles.imagePicker]} onPress={pickImage}>
+                            <Text>adicionar fotos</Text>
+                        </Pressable>
+
+                        <Text style={styles.label}>ESPÉCIE</Text>
+                        <DefaultRadio items={["Cachorro", "Gato"]}></DefaultRadio>
+
+                        <Text style={styles.label}>SEXO</Text>
+                        <DefaultRadio items={["Macho", "Femea"]}></DefaultRadio>
+
+                        <Text style={styles.label}>PORTE</Text>
+                        <DefaultRadio items={["Pequeno", "Medio", "Grande"]}></DefaultRadio>
+
+                        <Text style={styles.label}>IDADE</Text>
+                        <DefaultRadio items={["Filhote", "Adulto", "Idoso"]}></DefaultRadio>
+
+                        <Text style={styles.label}>TEMPERAMENTO</Text>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Brincalhão"></DefaultCheckbox>
+                            <DefaultCheckbox name="Tímido"></DefaultCheckbox>
+                            <DefaultCheckbox name="Calmo"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Guarda"></DefaultCheckbox>
+                            <DefaultCheckbox name="Amoroso"></DefaultCheckbox>
+                            <DefaultCheckbox name="Preguiçoso"></DefaultCheckbox>
+                        </View>
+
+                        <Text style={styles.label}>SAÚDE</Text>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Vacinado"></DefaultCheckbox>
+                            <DefaultCheckbox name="Vermifugado"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Castrado"></DefaultCheckbox>
+                            <DefaultCheckbox name="Doente"></DefaultCheckbox>
+                        </View>
+                        <Input placeholder='Doenças do animal'/>
+
+                        <Text style={styles.label}>EXIGÊNCIAS PARA ADOÇÃO</Text>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Termo de adoção"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Fotos da casa"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Visita prévia ao animal"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="Acompanhamento após adoção"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="1 mês" secondary="true"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="3 meses" secondary="true"></DefaultCheckbox>
+                        </View>
+                        <View style={styles.section}>
+                            <DefaultCheckbox name="6 meses" secondary="true"></DefaultCheckbox>
+                        </View>
+
+                        <Text style={styles.label}>SOBRE O ANIMAL</Text>
+                        <Input placeholder='Compartilhe a história do animal'/>
+                    </View>
+
+                    <View style={styles.containerCenter}>
+                        <Pressable style={[styles.standardButton, styles.submitButton]}>
+                            <Text style={styles.standardButtonText}>COLOCAR PARA ADOÇÃO</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </ScrollView>
+        </>
     );
 }
 
@@ -24,9 +155,70 @@ const styles = StyleSheet.create({
         paddingStart: 20,
         paddingEnd: 20
     },
+    containerCenter: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    rowContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    section: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    headerSelectionText:{
+        marginTop: 16,
+        marginBottom: 16,
+        color: '#757575',
+        fontSize: 14,
+        fontFamily: 'Roboto_400Regular'
+    },
+    headerText:{
+        marginTop: 16,
+        marginBottom: 16,
+        color: '#434343',
+        fontSize: 16,
+        fontFamily: 'Roboto_500Medium'
+    },
     label:{
-        color: '#88c9bf',
-        marginTop: 15,
+        color: '#f7a800',
+        fontSize: 12,
+        marginTop: 20,
+        marginBottom: 16,
+        fontFamily: 'Roboto_400Regular'
+    },
+    standardButton: {
+        boxShadow: '0px 1px 4px #000000bf',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 2,
+        elevation: 3,
+        backgroundColor: '#ffd358',
+        width: 100,
+        height: 40
+    },
+    submitButton: {
+        width: 232,
+        height: 40,
+        margin: 24
+    },
+    inactiveButton: {
+        backgroundColor: '#f1f2f2'
+    },
+    standardButtonText: {
+        letterSpacing: 0,
+        fontSize: 12,
+        fontWeight: '400',
+        color: '#434343',
+        fontFamily: 'Roboto_400Regular'
+    },
+    inactiveButtonText: {
+        color: '#bdbdbd',
+    },
+    imagePicker: {
+        width: 312,
+        height: 128,
+        backgroundColor: "#f1f2f2"
     }
-
 });
