@@ -1,15 +1,30 @@
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text, StyleSheet, Pressable} from "react-native";
 import { Link } from 'expo-router';
+import React from "react";
 export default function Page() {
     return (
         <View style={styles.container}>
             <Text>Tela Home do App</Text>
-            <Link href="/autentication/login" style={styles.link}>
-                <Text style={{color: 'white'}}>Login!</Text>
-            </Link>
-            <Link href="/cadastros/cadastroAnimais" style={styles.link}>
-                <Text style={{color: 'white'}}>Cadastro de animais!</Text>
-            </Link>
+            <View style={[styles.standardButton, styles.submitButton]}>
+                <Link href="/autentication/login">
+                    <Text style={styles.standardButtonText}>LOGIN</Text>
+                </Link>
+            </View>
+            <View style={[styles.standardButton, styles.submitButton]}>
+                <Link href="/cadastros/cadastroAnimais">
+                    <Text style={styles.standardButtonText}>CADASTRO DE ANIMAIS</Text>
+                </Link>
+            </View>
+            <View style={[styles.standardButton, styles.submitButton]}>
+                <Link href="/user/createUser">
+                    <Text style={styles.standardButtonText}>REGISTRAR USUÁRIO</Text>
+                </Link>
+            </View>
+            <View style={[styles.standardButton, styles.submitButton]}>
+                <Link href="/user/showUser">
+                    <Text style={styles.standardButtonText}>PERFIL DE USUÁRIO</Text>
+                </Link>
+            </View>
         </View>
     );
 }
@@ -17,7 +32,35 @@ export default function Page() {
 const styles = StyleSheet.create({
     container:{
         alignItems: 'center',
-        marginTop: 10
+        marginTop: 10,
+        justifyContent: 'center',
+    },
+    containerCenter: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    standardButton: {
+        boxShadow: '0px 1px 4px #000000bf',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 2,
+        elevation: 3,
+        backgroundColor: '#ffd358',
+        width: 100,
+        height: 40
+    },
+    submitButton: {
+        width: 232,
+        height: 40,
+        margin: 24,
+        marginBottom: 10
+    },
+    standardButtonText: {
+        letterSpacing: 0,
+        fontSize: 12,
+        fontWeight: '400',
+        color: '#434343',
+        // fontFamily: 'Roboto_400Regular'
     },
     link: {
         alignItems: "center",
