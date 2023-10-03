@@ -1,20 +1,40 @@
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import Menu from "../../components/menus/menuTopo";
-import Input from "../../components/inputs/inputPadrao";
 import * as ImagePicker from "expo-image-picker";
 import {useState} from "react";
 import ImageButton from "../../assets/add-photo.png";
+import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
+
 
 export default function CreateUser() {
     const [image, setImage] = useState(null);
+    const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
+        defaultValues: {
+            nome: '',
+            idade: '',
+            email: '',
+            uf: '',
+            cidade: '',
+            endereco: '',
+            telefone: '',
+            username: '',
+            passwd: '',
+            passwdConfirm: '',
+        }
+    });
     let imgShow;
+
+    const onSubmit = data => {
+        console.log(data);
+    };
+
+    // console.log('errors', errors);
 
     if (image) {
         imgShow = <Image source={{uri: image}} style={styles.img}/>
     } else {
-
         imgShow = <Image source={ImageButton}></Image>
     }
     const pickImage = async () => {
@@ -48,37 +68,126 @@ export default function CreateUser() {
                     </Text>
                 </View>
                 <View style={styles.contentView}>
-                    <Input placeholder="Nome Completo"></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Nome Completo"
+                            />
+                        )}
+                        name="nome"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Idade"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Idade"
+                                keyboardType={"numeric"}
+                            />
+                        )}
+                        name="idade"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="E-mail"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="E-mail"
+                                keyboardType={"email-address"}
+                            />
+                        )}
+                        name="email"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Estado"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Estado"
+                            />
+                        )}
+                        name="uf"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Cidade"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Cidade"
+                            />
+                        )}
+                        name="cidade"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Endereço"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Endereço"
+                            />
+                        )}
+                        name="endereco"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Telefone"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Telefone"
+                                keyboardType={"phone-pad"}
+                            />
+                        )}
+                        name="telefone"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View>
                     <Text style={styles.text}>
@@ -86,19 +195,57 @@ export default function CreateUser() {
                     </Text>
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Nome de usuário"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Nome de usuário"
+                            />
+                        )}
+                        name="username"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Senha"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Senha"
+                                keyboardType={"visible-password"}
+                            />
+                        )}
+                        name="passwd"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View style={styles.contentView}>
-                    <Input
-                        placeholder="Confirmação de Senha"
-                    ></Input>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={value => onChange(value)}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="Confirmação de Senha"
+                                keyboardType={"visible-password"}
+                            />
+                        )}
+                        name="passwdConfirm"
+                        rules={{required: true}}
+                    />
                 </View>
                 <View>
                     <Text style={styles.text}>
@@ -111,7 +258,9 @@ export default function CreateUser() {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonEntrar}>
-                    <Button color="green" texto="FAZER CADASTRO"/>
+                    <Pressable onPress={handleSubmit(onSubmit)}>
+                        <Button color="green" texto="FAZER CADASTRO"/>
+                    </Pressable>
                 </View>
             </View>
         </ScrollView>
@@ -136,10 +285,10 @@ const styles = StyleSheet.create({
         height: 112,
         borderRadius: 100,
     },
-    imgPerfil:{
-        width:'100%',
-        alignItems:"center",
-        marginTop:32
+    imgPerfil: {
+        width: '100%',
+        alignItems: "center",
+        marginTop: 32
     },
     notification: {
         borderRadius: 4,
@@ -156,9 +305,17 @@ const styles = StyleSheet.create({
         color: '#757575'
     },
     buttonEntrar: {
-        width:'100%',
-        alignItems:"center",
-        marginTop:32,
-        marginBottom:32
+        width: '100%',
+        alignItems: "center",
+        marginTop: 32,
+        marginBottom: 32
+    },
+    input: {
+        fontSize: 14,
+        height: 40,
+        width: '100%',
+        borderBottomWidth: 0.8,
+        borderBottomColor: "#e6e7e8",
+        padding: 10,
     }
 });
