@@ -44,7 +44,7 @@ export default function CreateUser() {
                 </View>
                 <View>
                     <Text style={styles.text}>
-                        INFORMAÇÕES DE PERFIL
+                        INFORMAÇÕES DE PESSOAIS
                     </Text>
                 </View>
                 <View style={styles.contentView}>
