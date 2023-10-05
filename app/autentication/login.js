@@ -1,9 +1,9 @@
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, View} from 'react-native';
-import Menu from '../../components/menus/menuTopo'
 import Input from "../../components/inputs/inputPadrao";
 import Button from "../../components/buttons/buttonsPadroes";
-export default function Index() {
+
+export default function Login({ navigation }) {
     return (
         <View>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>

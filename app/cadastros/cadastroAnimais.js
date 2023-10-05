@@ -9,7 +9,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, {useEffect} from "react";
 import * as ImagePicker from "expo-image-picker";
 
-export default function Index() {
+export default function CadastroAnimais({ navigation }) {
     const [isReady, setIsReady] = React.useState(false);
     const [image, setImage] = React.useState(null);
 

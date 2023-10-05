@@ -8,7 +8,7 @@ import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
 
 
-export default function CreateUser() {
+export default function CreateUser({ navigation }) {
     const [image, setImage] = useState(null);
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {

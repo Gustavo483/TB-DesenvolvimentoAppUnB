@@ -4,7 +4,7 @@ import {StatusBar} from "expo-status-bar";
 import splash from '../../assets/icon.png';
 import Button from "../../components/buttons/buttonsPadroes";
 
-export default function ShowUser() {
+export default function ShowUser({ navigation }) {
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
