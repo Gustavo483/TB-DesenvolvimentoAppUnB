@@ -10,7 +10,6 @@ import React, {useEffect} from "react";
 import * as ImagePicker from "expo-image-picker";
 
 export default function CadastroAnimais({ navigation }) {
-    const [isReady, setIsReady] = React.useState(false);
     const [image, setImage] = React.useState(null);
 
     const pickImage = async () => {
@@ -26,28 +25,6 @@ export default function CadastroAnimais({ navigation }) {
         }
     };
 
-    useEffect(() => {
-        SplashScreen.preventAutoHideAsync()
-            .then(() => {})
-            .catch((e) => console.warn(e));
-    }, []);
-    let [fontsLoaded] = useFonts({
-        Roboto_400Regular,
-        Roboto_500Medium
-    });
-
-    if (fontsLoaded && !isReady) {
-        setIsReady(true);
-
-        SplashScreen.hideAsync()
-            .then(() => {})
-            .catch((e) => console.warn(e));
-    }
-
-    if (!isReady) {
-        return null;
-    }
-
     return (
         <>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
@@ -55,7 +32,7 @@ export default function CadastroAnimais({ navigation }) {
                 <View style={styles.container}>
                     <Text style={styles.headerSelectionText}>Tenho interesse em cadastrar animal para:</Text>
                     <View style={styles.rowContainer}>
-                        <Pressable style={styles.standardButton} /*onPress={() => navigation.navigate('Cadastro')}*/>
+                        <Pressable style={styles.standardButton}>
                             <Text style={styles.standardButtonText}>ADOÇÃO</Text>
                         </Pressable>
                         <Pressable style={[styles.standardButton, styles.inactiveButton]}>
