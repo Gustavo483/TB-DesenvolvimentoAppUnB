@@ -1,15 +1,12 @@
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, View, Text, Pressable, ScrollView} from 'react-native';
-import Menu from '../../components/menus/menuTopo'
 import Input from "../../components/inputs/inputPadrao";
 import DefaultCheckbox from "../../components/inputs/checkboxPadrao";
 import DefaultRadio from "../../components/inputs/radioPadrao";
-import {useFonts, Roboto_400Regular, Roboto_500Medium} from '@expo-google-fonts/roboto';
-import * as SplashScreen from 'expo-splash-screen';
-import React, {useEffect} from "react";
+import React from "react";
 import * as ImagePicker from "expo-image-picker";
 
-export default function CadastroAnimais({ navigation }) {
+export default function CadastroAnimais() {
     const [image, setImage] = React.useState(null);
 
     const pickImage = async () => {

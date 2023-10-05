@@ -9,7 +9,7 @@ export default function Home({navigation}) {
             <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.standardButtonText}>LOGIN</Text>
             </Pressable>
-            <Pressable style={[styles.standardButton, styles.submitButton]}onPress={() => navigation.navigate('CadastroAnimais')}>
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('CadastroAnimais')}>
                 <Text style={styles.standardButtonText}>CADASTRO DE ANIMAIS</Text>
             </Pressable>
             <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('CreateUser')}>
