@@ -8,9 +8,6 @@ export default function ShowUser() {
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <View style={styles.espacamentoMenu}>
-                <Menu nome="Menu"/>
-            </View>
             <View style={styles.container}>
                 <Image source={splash} style={styles.img}></Image>
                 <Text style={{fontWeight: 'bold'}}>Marilia Martins</Text>

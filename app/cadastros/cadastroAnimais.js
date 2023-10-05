@@ -51,7 +51,6 @@ export default function Index() {
     return (
         <>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <Menu nome="Cadastro do Animal"/>
             <ScrollView>
                 <View style={styles.container}>
                     <Text style={styles.headerSelectionText}>Tenho interesse em cadastrar animal para:</Text>

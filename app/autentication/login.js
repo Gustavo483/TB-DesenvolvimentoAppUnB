@@ -7,9 +7,6 @@ export default function Index() {
     return (
         <View>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <View style={styles.espacamentoMenu}>
-                <Menu nome="Login"/>
-            </View>
             <View style={styles.container}>
                 <View>
                     <Input placeholder='Nome de usuário'/>

@@ -53,9 +53,6 @@ export default function CreateUser() {
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <View style={styles.espacamentoMenu}>
-                <Menu nome="Cadastro Pessoal"/>
-            </View>
             <View style={styles.container}>
                 <View style={styles.notification}>
                     <Text style={{textAlign: "center"}}>As informações preenchidas serão divulgadas apenas para a pessoa
