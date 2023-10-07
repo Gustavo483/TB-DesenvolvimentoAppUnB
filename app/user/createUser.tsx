@@ -1,12 +1,10 @@
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
-import Menu from "../../components/menus/menuTopo";
 import * as ImagePicker from "expo-image-picker";
-import {useState} from "react";
-import ImageButton from "../../assets/add-photo.png";
+import React, {useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
-
+import { auth } from "../../firebaseConfig";
 
 export default function CreateUser({ navigation }) {
     const [image, setImage] = useState(null);
@@ -31,12 +29,6 @@ export default function CreateUser({ navigation }) {
     };
 
     // console.log('errors', errors);
-
-    if (image) {
-        imgShow = <Image source={{uri: image}} style={styles.img}/>
-    } else {
-        imgShow = <Image source={ImageButton}></Image>
-    }
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -49,6 +41,15 @@ export default function CreateUser({ navigation }) {
             setImage(result.assets[0].uri);
         }
     };
+
+    if (image) {
+        imgShow = <Image source={{uri: image}} style={styles.img}/>
+    } else {
+        imgShow =
+            <Pressable style={[styles.containerCenter, styles.imagePicker]} onPress={pickImage}>
+                <Text>adicionar fotos</Text>
+            </Pressable>
+    }
 
     return (
         <ScrollView>
@@ -314,5 +315,14 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.8,
         borderBottomColor: "#e6e7e8",
         padding: 10,
+    },
+    containerCenter: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imagePicker: {
+        width: 312,
+        height: 128,
+        backgroundColor: "#f1f2f2"
     }
 });

@@ -1,8 +1,8 @@
 {
   "expo": {
     "scheme": "your-app-scheme",
-    "name": "TB-DesenvolvimentoAppUnB",
-    "slug": "TB-DesenvolvimentoAppUnB",
+    "name": "Meau",
+    "slug": "Meau",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
