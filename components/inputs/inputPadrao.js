@@ -1,13 +1,24 @@
 import {StyleSheet, SafeAreaView, TextInput, Text, View} from 'react-native';
+import {useState} from "react";
 
-export default function Input({placeholder}) {
+export default function Input({onTextChange, placeholder}) {
+    const [text, setText] = useState('');
+    const handleTextChange = (inputText) => {
+        setText(inputText);
+        // Pass the input text back up to the parent
+        onTextChange(inputText);
+    };
+
     return (
         <View>
             <SafeAreaView>
                 <TextInput
+                    value={text}
+                    onChangeText={handleTextChange}
                     placeholderTextColor={'#bdbdbd'}
                     placeholder={placeholder}
-                    style={styles.input}></TextInput>
+                    style={styles.input}>
+                </TextInput>
             </SafeAreaView>
         </View>
     );

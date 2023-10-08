@@ -5,9 +5,34 @@ import React, {useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
 import { auth } from "../../firebaseConfig";
+import {createUserWithEmailAndPassword} from "@firebase/auth";
+import Input from "../../components/inputs/inputPadrao";
 
 export default function CreateUser({ navigation }) {
     const [image, setImage] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleEmailChange = (text: string) => {
+        setEmail(text);
+    };
+    const handlePasswordChange = (text: string) => {
+        setPassword(text);
+    };
+
+    const registerUser = () => {
+        console.log('teste');
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    }
+
+
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {
             nome: '',
@@ -193,21 +218,10 @@ export default function CreateUser({ navigation }) {
                     </Text>
                 </View>
                 <View style={styles.contentView}>
-                    <Controller
-                        control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
-                            <TextInput
-                                style={styles.input}
-                                onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
-                                value={value}
-                                placeholderTextColor={'#bdbdbd'}
-                                placeholder="Nome de usuário"
-                            />
-                        )}
-                        name="username"
-                        rules={{required: true}}
-                    />
+                    <Input onTextChange={handleEmailChange} placeholder='E-Mail'/>
+                </View>
+                <View style={styles.contentView}>
+                    <Input onTextChange={handlePasswordChange} placeholder='Senha'/>
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -216,7 +230,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={value => setPassword(value)}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Senha"
@@ -256,7 +270,7 @@ export default function CreateUser({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonEntrar}>
-                    <Pressable onPress={handleSubmit(onSubmit)}>
+                    <Pressable onPress={() => registerUser()}>
                         <Button color="green" texto="FAZER CADASTRO"/>
                     </Pressable>
                 </View>
