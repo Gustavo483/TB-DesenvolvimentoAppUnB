@@ -4,8 +4,9 @@ import * as ImagePicker from "expo-image-picker";
 import React, {useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
-import { auth } from "../../firebaseConfig";
-import {createUserWithEmailAndPassword} from "@firebase/auth";
+import { auth, fs } from "../../firebaseConfig";
+import { createUserWithEmailAndPassword } from "@firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
 import Input from "../../components/inputs/inputPadrao";
 
 export default function CreateUser({ navigation }) {
@@ -13,22 +14,20 @@ export default function CreateUser({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleEmailChange = (text: string) => {
-        setEmail(text);
-    };
-    const handlePasswordChange = (text: string) => {
-        setPassword(text);
-    };
-
     const registerUser = () => {
-        console.log('teste');
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 const user = userCredential.user;
+                const docRef = await addDoc(collection(fs, "users"), {
+                    uid: user.uid,
+                    email: email
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
             });
     }
 
@@ -218,10 +217,10 @@ export default function CreateUser({ navigation }) {
                     </Text>
                 </View>
                 <View style={styles.contentView}>
-                    <Input onTextChange={handleEmailChange} placeholder='E-Mail'/>
+                    <Input onTextChange={setEmail} placeholder='E-Mail'/>
                 </View>
                 <View style={styles.contentView}>
-                    <Input onTextChange={handlePasswordChange} placeholder='Senha'/>
+                    <Input onTextChange={setPassword} placeholder='Senha'/>
                 </View>
                 <View style={styles.contentView}>
                     <Controller
