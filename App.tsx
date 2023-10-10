@@ -5,7 +5,7 @@ import CreateUser from "./app/user/createUser";
 import ShowUser from "./app/user/showUser";
 import CadastroAnimais from "./app/cadastros/cadastroAnimais";
 import Home from "./app/hub/home";
-import React, {useEffect} from "react";
+import {useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { Roboto_400Regular, Roboto_500Medium, useFonts } from "@expo-google-fonts/roboto";
 import { Courgette_400Regular } from "@expo-google-fonts/courgette";
@@ -34,7 +34,7 @@ function MyStack() {
 }
 
 export default function App() {
-    const [isReady, setIsReady] = React.useState(false);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         SplashScreen.preventAutoHideAsync()

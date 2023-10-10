@@ -1,15 +1,29 @@
-import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
-import Menu from '../../components/menus/menuTopo'
+import {Image, ImageSourcePropType, ScrollView, StyleSheet, Text, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
-import splash from '../../assets/icon.png';
 import Button from "../../components/buttons/buttonsPadroes";
+import {st} from "../../config/firebaseConfig";
+import {getDownloadURL, ref} from "@firebase/storage";
+import {useState} from "react";
 
 export default function ShowUser({ navigation }) {
+
+    const [userAvatar, setUserAvatar] = useState(null);
+
+    const downloadImage = async (imageName: string) => {
+        const storageRef = getDownloadURL(ref(st, imageName))
+            .then((url) => {
+                setUserAvatar(url);
+            }).catch((error) => {
+                console.log(error);
+            });
+    }
+
+    downloadImage('img/default/icon.png').then(r => {});
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <View style={styles.container}>
-                <Image source={splash} style={styles.img}></Image>
+                <Image source={{uri: userAvatar}} style={styles.img}></Image>
                 <Text style={{fontWeight: 'bold'}}>Marilia Martins</Text>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>NOME COMPLETO</Text>
