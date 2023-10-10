@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, {useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
-import { auth, fs } from "../../firebaseConfig";
+import { auth, fs } from "../../config/firebaseConfig";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import Input from "../../components/inputs/inputPadrao";
@@ -13,6 +13,8 @@ export default function CreateUser({ navigation }) {
     const [image, setImage] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [name, setName] = useState('');
 
     const registerUser = () => {
         createUserWithEmailAndPassword(auth, email, password)
@@ -20,7 +22,8 @@ export default function CreateUser({ navigation }) {
                 const user = userCredential.user;
                 const docRef = await addDoc(collection(fs, "users"), {
                     uid: user.uid,
-                    email: email
+                    email: email,
+                    name: name
                 });
             })
             .catch((error) => {
@@ -90,21 +93,7 @@ export default function CreateUser({ navigation }) {
                     </Text>
                 </View>
                 <View style={styles.contentView}>
-                    <Controller
-                        control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
-                            <TextInput
-                                style={styles.input}
-                                onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
-                                value={value}
-                                placeholderTextColor={'#bdbdbd'}
-                                placeholder="Nome Completo"
-                            />
-                        )}
-                        name="nome"
-                        rules={{required: true}}
-                    />
+                    <Input onTextChange={setName} placeholder='Nome Completo'/>
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -220,43 +209,11 @@ export default function CreateUser({ navigation }) {
                     <Input onTextChange={setEmail} placeholder='E-Mail'/>
                 </View>
                 <View style={styles.contentView}>
-                    <Input onTextChange={setPassword} placeholder='Senha'/>
+                    <Input onTextChange={setPassword} placeholder='Senha' password={true}/>
                 </View>
+
                 <View style={styles.contentView}>
-                    <Controller
-                        control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
-                            <TextInput
-                                style={styles.input}
-                                onBlur={onBlur}
-                                onChangeText={value => setPassword(value)}
-                                value={value}
-                                placeholderTextColor={'#bdbdbd'}
-                                placeholder="Senha"
-                                keyboardType={"visible-password"}
-                            />
-                        )}
-                        name="passwd"
-                        rules={{required: true}}
-                    />
-                </View>
-                <View style={styles.contentView}>
-                    <Controller
-                        control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
-                            <TextInput
-                                style={styles.input}
-                                onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
-                                value={value}
-                                placeholderTextColor={'#bdbdbd'}
-                                placeholder="Confirmação de Senha"
-                                keyboardType={"visible-password"}
-                            />
-                        )}
-                        name="passwdConfirm"
-                        rules={{required: true}}
-                    />
+                    <Input onTextChange={setPasswordConfirmation} placeholder='Confirmação de senha' password={true}/>
                 </View>
                 <View>
                     <Text style={styles.text}>

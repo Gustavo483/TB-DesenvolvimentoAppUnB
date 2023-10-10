@@ -1,7 +1,7 @@
 import {StyleSheet, SafeAreaView, TextInput, Text, View} from 'react-native';
 import {useState} from "react";
 
-export default function Input({onTextChange, placeholder}) {
+export default function Input({onTextChange, placeholder, password = false}) {
     const [text, setText] = useState('');
     const handleTextChange = (inputText) => {
         setText(inputText);
@@ -14,6 +14,7 @@ export default function Input({onTextChange, placeholder}) {
             <SafeAreaView>
                 <TextInput
                     value={text}
+                    secureTextEntry={password}
                     onChangeText={handleTextChange}
                     placeholderTextColor={'#bdbdbd'}
                     placeholder={placeholder}
