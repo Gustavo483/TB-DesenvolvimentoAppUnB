@@ -1,15 +1,17 @@
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import * as ImagePicker from "expo-image-picker";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
 import { auth, fs } from "../../config/firebaseConfig";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import Input from "../../components/inputs/inputPadrao";
+import UserContext from "../../context/UserContext";
 
 export default function CreateUser({ navigation }) {
+    const { userContext } = useContext(UserContext);
     const [image, setImage] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -25,6 +27,7 @@ export default function CreateUser({ navigation }) {
                     email: email,
                     name: name
                 });
+                // userContext.docRef = docRef;
             })
             .catch((error) => {
                 const errorCode = error.code;

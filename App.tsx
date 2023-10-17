@@ -9,6 +9,7 @@ import {useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { Roboto_400Regular, Roboto_500Medium, useFonts } from "@expo-google-fonts/roboto";
 import { Courgette_400Regular } from "@expo-google-fonts/courgette";
+import UserContext from "./context/UserContext";
 
 const Stack = createStackNavigator();
 
@@ -22,15 +23,18 @@ const options: StackNavigationOptions = {
 };
 
 function MyStack() {
-  return (
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen options={options} name="Home" component={Home} />
-        <Stack.Screen options={options} name="Login" component={Login} />
-        <Stack.Screen options={options} name="CreateUser" component={CreateUser} />
-        <Stack.Screen options={options} name="CadastroAnimais" component={CadastroAnimais} />
-        <Stack.Screen options={options} name="ShowUser" component={ShowUser} />
-      </Stack.Navigator>
-  );
+    const [user, setUser] = useState(null);
+    return (
+        <UserContext.Provider value={{user, setUser}}>
+            <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen options={options} name="Home" component={Home} />
+                <Stack.Screen options={options} name="Login" component={Login} />
+                <Stack.Screen options={options} name="CreateUser" component={CreateUser} />
+                <Stack.Screen options={options} name="CadastroAnimais" component={CadastroAnimais} />
+                <Stack.Screen options={options} name="ShowUser" component={ShowUser} />
+            </Stack.Navigator>
+      </UserContext.Provider>
+    );
 }
 
 export default function App() {

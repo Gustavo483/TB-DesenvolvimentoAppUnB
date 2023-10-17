@@ -1,13 +1,17 @@
 import {Image, ImageSourcePropType, ScrollView, StyleSheet, Text, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import Button from "../../components/buttons/buttonsPadroes";
-import {st} from "../../config/firebaseConfig";
+import {st, fs} from "../../config/firebaseConfig";
 import {getDownloadURL, ref} from "@firebase/storage";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {collection, getDoc} from "firebase/firestore";
+import UserContext from "../../context/UserContext";
 
 export default function ShowUser({ navigation }) {
+    const { userContext } = useContext(UserContext);
 
     const [userAvatar, setUserAvatar] = useState(null);
+    const [name, setName] = useState('');
 
     const downloadImage = async (imageName: string) => {
         const storageRef = getDownloadURL(ref(st, imageName))
@@ -18,16 +22,21 @@ export default function ShowUser({ navigation }) {
             });
     }
 
+    // const querySnapshot = getDoc(userContext.docRef)
+    //     .then((docSnap) => {
+    //         setName(docSnap.get("name"));
+    //     })
+
     downloadImage('img/default/icon.png').then(r => {});
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <View style={styles.container}>
                 <Image source={{uri: userAvatar}} style={styles.img}></Image>
-                <Text style={{fontWeight: 'bold'}}>Marilia Martins</Text>
+                <Text style={{fontWeight: 'bold'}}>Nome teste</Text>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>NOME COMPLETO</Text>
-                    <Text style={styles.subText}>Marilia Martins de Souza</Text>
+                    <Text style={styles.subText}>Nome teste</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>IDADE</Text>
