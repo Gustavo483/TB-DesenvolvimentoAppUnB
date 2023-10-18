@@ -9,6 +9,7 @@ import React, {useEffect} from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { Roboto_400Regular, Roboto_500Medium, useFonts } from "@expo-google-fonts/roboto";
 import { Courgette_400Regular } from "@expo-google-fonts/courgette";
+import {FIREBASE_AUTH} from "./firebaseConfig";
 
 const Stack = createStackNavigator();
 
@@ -22,8 +23,9 @@ const options: StackNavigationOptions = {
 };
 
 function MyStack() {
+    const initialRoute  = FIREBASE_AUTH.currentUser ? 'Home' : 'Login'
   return (
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName={initialRoute}>
         <Stack.Screen options={options} name="Home" component={Home} />
         <Stack.Screen options={options} name="Login" component={Login} />
         <Stack.Screen options={options} name="CreateUser" component={CreateUser} />
@@ -33,7 +35,7 @@ function MyStack() {
   );
 }
 
-export default function App() {
+export default function App({navigation}) {
     const [isReady, setIsReady] = React.useState(false);
 
     useEffect(() => {
