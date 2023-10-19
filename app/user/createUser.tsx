@@ -39,6 +39,8 @@ export default function CreateUser({ navigation }) {
                     idade : data.idade,
                     telefone : data.telefone
                 });
+                navigation.navigate('Login')
+
             })
             .catch((error) => {
                 const errorCode = error.code;
