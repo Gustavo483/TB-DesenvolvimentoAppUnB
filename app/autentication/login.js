@@ -5,11 +5,11 @@ import Button from "../../components/buttons/buttonsPadroes";
 import React, {useState} from "react";
 import {signInWithEmailAndPassword} from "@firebase/auth";
 import {FIREBASE_AUTH} from "../../firebaseConfig";
+import CreateUser from "../user/createUser";
 
 export default function Login({ navigation,setUser }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const signIn = async () => {
         signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
             .then(async (userCredential) => {
@@ -36,6 +36,11 @@ export default function Login({ navigation,setUser }) {
             <View style={styles.buttonEntrar}>
                 <Pressable onPress={() => signIn()}>
                     <Button color="green" texto="ENTRAR"/>
+                </Pressable>
+            </View>
+            <View style={styles.buttonEntrar}>
+                <Pressable onPress={() => navigation.navigate('CreateUser')}>
+                    <Button color="green" texto="CADASTRAR-SE"/>
                 </Pressable>
             </View>
             <View style={styles.buttonFacebook}>
