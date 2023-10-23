@@ -6,22 +6,25 @@ import Login from "../autentication/login";
 import Signup from "../user/signup";
 import Create from "../pet/create";
 import Profile from "../user/profile";
+import {auth} from "../../config/firebaseConfig";
+import CustomDrawer from "../../components/drawer/customDrawer";
 
 const Drawer = createDrawerNavigator();
 
+const initialRoute = auth.currentUser ? 'Home' : 'Login'
 export default function DrawerRoutes() {
     return (
-        <Drawer.Navigator>
+        <Drawer.Navigator initialRouteName={initialRoute} drawerContent={props => <CustomDrawer {...props}/>}>
             <Drawer.Screen
                 name={"Home"}
                 component={Home}
                 options={{
-                    drawerIcon: ({color, size}) => <Feather name={"home"} color={color} size={size} />,
+                    drawerIcon: ({color, size}) => <Feather name={"home"} color={color} size={size}/>,
                     drawerLabel: 'Home'
                 }}
             />
             <Drawer.Screen
-                name={"Profile"}
+                name={"Meu Perfil"}
                 component={Profile}
                 options={{
                     drawerLabel: 'Meu Perfil'
@@ -38,14 +41,14 @@ export default function DrawerRoutes() {
                 name={"Signup"}
                 component={Signup}
                 options={{
-                    drawerLabel: 'Signup'
+                    drawerLabel: 'Registrar Usuário'
                 }}
             />
             <Drawer.Screen
                 name={"Create"}
                 component={Create}
                 options={{
-                    drawerLabel: 'Create'
+                    drawerLabel: 'Cadastro de Animais'
                 }}
             />
         </Drawer.Navigator>
