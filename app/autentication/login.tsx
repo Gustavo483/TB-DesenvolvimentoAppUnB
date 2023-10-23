@@ -1,10 +1,11 @@
+import {useState} from "react";
 import {StatusBar} from 'expo-status-bar';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {Pressable, View} from 'react-native';
+import {auth} from "../../config/firebaseConfig";
+import {global} from "../../styles/global";
 import Input from "../../components/inputs/inputPadrao";
 import Button from "../../components/buttons/buttonsPadroes";
-import {useState} from "react";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../../config/firebaseConfig";
 
 export default function Login({ navigation,setUser }) {
     const [email, setEmail] = useState('');
@@ -24,55 +25,30 @@ export default function Login({ navigation,setUser }) {
     return (
         <View>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <View style={styles.container}>
+            <View style={global.container}>
                 <View>
                     <Input onTextChange={setEmail} placeholder='Nome de usuário'/>
                 </View>
-                <View style={styles.espacamentoInput}>
+                <View style={global.espacamentoInput}>
                     <Input onTextChange={setPassword} placeholder='Senha'/>
                 </View>
             </View>
-            <View style={styles.buttonEntrar}>
+            <View style={global.buttonEntrar}>
                 <Pressable onPress={() => signIn()}>
                     <Button color="green" texto="ENTRAR"/>
                 </Pressable>
             </View>
-            <View style={styles.buttonEntrar}>
+            <View style={global.buttonEntrar}>
                 <Pressable onPress={() => navigation.navigate('Signup')}>
                     <Button color="green" texto="CADASTRAR-SE"/>
                 </Pressable>
             </View>
-            <View style={styles.buttonFacebook}>
+            <View style={global.buttonFacebook}>
                 <Button color="blue" texto="ENTRAR COM FACEBOOK" svg="facebook"/>
             </View>
-            <View style={styles.buttonGoogle}>
+            <View style={global.buttonGoogle}>
                 <Button color="orange" texto="ENTRAR COM GOOGLE" svg="google-"/>
             </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container:{
-        marginStart: 20,
-        marginEnd: 20
-    },
-    buttonEntrar: {
-        alignItems: 'center',
-        marginTop: 52
-    },
-    buttonFacebook: {
-        alignItems: 'center',
-        marginTop: 72
-    },
-    buttonGoogle: {
-        alignItems: 'center',
-        marginTop: 8
-    },
-    espacamentoInput: {
-        marginTop: 20
-    },
-    espacamentoMenu: {
-        marginBottom: 64
-    }
-});
