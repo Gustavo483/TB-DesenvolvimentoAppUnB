@@ -7,21 +7,40 @@ import Button from "../../components/buttons/buttonsPadroes";
 import { auth, fs } from "../../firebaseConfig";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
-import Input from "../../components/inputs/inputPadrao";
 
 export default function CreateUser({ navigation }) {
     const [image, setImage] = useState(null);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const registerUser = () => {
-        createUserWithEmailAndPassword(auth, email, password)
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            nome: '',
+            passwdConfirm :'',
+            password :'',
+            telefone :'',
+            endereco :'',
+            cidade :'',
+            uf :'',
+            email :'',
+            idade :''
+        }
+    });
+    const onSubmit = data => {
+        console.log(data)
+        createUserWithEmailAndPassword(auth, data.email, data.password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
                 const docRef = await addDoc(collection(fs, "users"), {
                     uid: user.uid,
-                    email: email
+                    email: data.email,
+                    nome : data.nome,
+                    endereco : data.endereco,
+                    cidade : data.cidade,
+                    uf : data.uf,
+                    idade : data.idade,
+                    telefone : data.telefone
                 });
+                navigation.navigate('Login')
+
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -29,28 +48,11 @@ export default function CreateUser({ navigation }) {
                 console.log(errorCode);
                 console.log(errorMessage);
             });
+
     }
-
-
-    const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
-        defaultValues: {
-            nome: '',
-            idade: '',
-            email: '',
-            uf: '',
-            cidade: '',
-            endereco: '',
-            telefone: '',
-            username: '',
-            passwd: '',
-            passwdConfirm: '',
-        }
-    });
     let imgShow;
 
-    const onSubmit = data => {
-        console.log(data);
-    };
+
 
     // console.log('errors', errors);
     const pickImage = async () => {
@@ -92,20 +94,24 @@ export default function CreateUser({ navigation }) {
                 <View style={styles.contentView}>
                     <Controller
                         control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                                 style={styles.input}
-                                onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
-                                value={value}
-                                placeholderTextColor={'#bdbdbd'}
                                 placeholder="Nome Completo"
+                                onBlur={onBlur}
+                                placeholderTextColor={'#bdbdbd'}
+                                onChangeText={onChange}
+                                value={value}
                             />
                         )}
                         name="nome"
-                        rules={{required: true}}
                     />
+                    {errors.nome && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
+
                 <View style={styles.contentView}>
                     <Controller
                         control={control}
@@ -113,7 +119,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Idade"
@@ -123,6 +129,7 @@ export default function CreateUser({ navigation }) {
                         name="idade"
                         rules={{required: true}}
                     />
+                    {errors.idade && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -131,7 +138,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="E-mail"
@@ -141,6 +148,7 @@ export default function CreateUser({ navigation }) {
                         name="email"
                         rules={{required: true}}
                     />
+                    {errors.email && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -149,7 +157,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Estado"
@@ -158,6 +166,7 @@ export default function CreateUser({ navigation }) {
                         name="uf"
                         rules={{required: true}}
                     />
+                    {errors.uf && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -166,7 +175,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Cidade"
@@ -175,6 +184,7 @@ export default function CreateUser({ navigation }) {
                         name="cidade"
                         rules={{required: true}}
                     />
+                    {errors.cidade && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -183,7 +193,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Endereço"
@@ -192,6 +202,7 @@ export default function CreateUser({ navigation }) {
                         name="endereco"
                         rules={{required: true}}
                     />
+                    {errors.endereco && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -200,7 +211,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Telefone"
@@ -210,6 +221,7 @@ export default function CreateUser({ navigation }) {
                         name="telefone"
                         rules={{required: true}}
                     />
+                    {errors.telefone && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View>
                     <Text style={styles.text}>
@@ -217,10 +229,23 @@ export default function CreateUser({ navigation }) {
                     </Text>
                 </View>
                 <View style={styles.contentView}>
-                    <Input onTextChange={setEmail} placeholder='E-Mail'/>
-                </View>
-                <View style={styles.contentView}>
-                    <Input onTextChange={setPassword} placeholder='Senha'/>
+                    <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholderTextColor={'#bdbdbd'}
+                                placeholder="E-mail"
+                                keyboardType={"email-address"}
+                            />
+                        )}
+                        name="email"
+                        rules={{required: true}}
+                    />
+                    {errors.email && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -229,16 +254,17 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => setPassword(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Senha"
                                 keyboardType={"visible-password"}
                             />
                         )}
-                        name="passwd"
+                        name="password"
                         rules={{required: true}}
                     />
+                    {errors.password && <Text style={styles.colorError}>Este campo deve ser preenchido</Text>}
                 </View>
                 <View style={styles.contentView}>
                     <Controller
@@ -247,7 +273,7 @@ export default function CreateUser({ navigation }) {
                             <TextInput
                                 style={styles.input}
                                 onBlur={onBlur}
-                                onChangeText={value => onChange(value)}
+                                onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Confirmação de Senha"
@@ -257,6 +283,7 @@ export default function CreateUser({ navigation }) {
                         name="passwdConfirm"
                         rules={{required: true}}
                     />
+                    {errors.passwdConfirm && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View>
                     <Text style={styles.text}>
@@ -269,7 +296,7 @@ export default function CreateUser({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonEntrar}>
-                    <Pressable onPress={() => registerUser()}>
+                    <Pressable onPress={handleSubmit(onSubmit)}>
                         <Button color="green" texto="FAZER CADASTRO"/>
                     </Pressable>
                 </View>
@@ -320,6 +347,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 32,
         marginBottom: 32
+    },
+    colorError: {
+        color: '#8A0303'
     },
     input: {
         fontSize: 14,

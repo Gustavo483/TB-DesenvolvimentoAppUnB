@@ -1,14 +1,29 @@
 import {View, Text, StyleSheet, Pressable} from "react-native";
 import React from "react";
 import {StatusBar} from "expo-status-bar";
+import {FIREBASE_AUTH} from "../../firebaseConfig";
 export default function Home({navigation}) {
+
+    const auth = FIREBASE_AUTH.currentUser
+    const signOut = async () => {
+            await FIREBASE_AUTH.signOut()
+                .then(navigation.navigate('Login'))
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode);
+                    console.log(errorMessage);
+                });
+
+    }
     return (
         <View style={styles.container}>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <Text>Tela Home do App</Text>
-            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Login')}>
+            {!auth ? (<Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.standardButtonText}>LOGIN</Text>
-            </Pressable>
+            </Pressable>) : (<Text style={styles.standardButtonText}></Text>)}
+
             <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('CadastroAnimais')}>
                 <Text style={styles.standardButtonText}>CADASTRO DE ANIMAIS</Text>
             </Pressable>
@@ -18,6 +33,12 @@ export default function Home({navigation}) {
             <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('ShowUser')}>
                 <Text style={styles.standardButtonText}>PERFIL DE USUÁRIO</Text>
             </Pressable>
+
+            {auth ? ( <Pressable  style={[styles.standardButton, styles.submitButton]}  onPress={() => signOut()}>
+                <Text style={styles.standardButtonText}> SIGN OUT</Text>
+            </Pressable>) : (<Text style={styles.standardButtonText}></Text>)}
+
+
         </View>
     );
 }
