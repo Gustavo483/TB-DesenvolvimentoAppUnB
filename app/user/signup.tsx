@@ -1,14 +1,15 @@
+import * as ImagePicker from "expo-image-picker";
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
-import * as ImagePicker from "expo-image-picker";
-import React, {useState} from "react";
+import {useState} from "react";
+import {collection, addDoc} from "firebase/firestore";
+import {createUserWithEmailAndPassword} from "@firebase/auth";
 import {Controller, useForm} from "react-hook-form";
+import {auth, fs} from "../../config/firebaseConfig";
+import {signup} from "../../styles/global";
 import Button from "../../components/buttons/buttonsPadroes";
-import { auth, fs } from "../../firebaseConfig";
-import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
 
-export default function CreateUser({ navigation }) {
+export default function Signup({ navigation }) {
     const [image, setImage] = useState(null);
 
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -52,9 +53,6 @@ export default function CreateUser({ navigation }) {
     }
     let imgShow;
 
-
-
-    // console.log('errors', errors);
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -69,10 +67,10 @@ export default function CreateUser({ navigation }) {
     };
 
     if (image) {
-        imgShow = <Image source={{uri: image}} style={styles.img}/>
+        imgShow = <Image source={{uri: image}} style={signup.img}/>
     } else {
         imgShow =
-            <Pressable style={[styles.containerCenter, styles.imagePicker]} onPress={pickImage}>
+            <Pressable style={[signup.containerCenter, signup.imagePicker]} onPress={pickImage}>
                 <Text>adicionar fotos</Text>
             </Pressable>
     }
@@ -80,18 +78,18 @@ export default function CreateUser({ navigation }) {
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
-            <View style={styles.container}>
-                <View style={styles.notification}>
+            <View style={signup.container}>
+                <View style={signup.notification}>
                     <Text style={{textAlign: "center"}}>As informações preenchidas serão divulgadas apenas para a pessoa
                         com a qual você realizar o
                         processo de adoção e/ou apadrinhamento, após a formalização do processo.</Text>
                 </View>
                 <View>
-                    <Text style={styles.text}>
+                    <Text style={signup.text}>
                         INFORMAÇÕES DE PESSOAIS
                     </Text>
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         rules={{
@@ -99,7 +97,7 @@ export default function CreateUser({ navigation }) {
                         }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 placeholder="Nome Completo"
                                 onBlur={onBlur}
                                 placeholderTextColor={'#bdbdbd'}
@@ -109,15 +107,15 @@ export default function CreateUser({ navigation }) {
                         )}
                         name="nome"
                     />
-                    {errors.nome && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.nome && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
 
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -129,33 +127,14 @@ export default function CreateUser({ navigation }) {
                         name="idade"
                         rules={{required: true}}
                     />
-                    {errors.idade && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.idade && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholderTextColor={'#bdbdbd'}
-                                placeholder="E-mail"
-                                keyboardType={"email-address"}
-                            />
-                        )}
-                        name="email"
-                        rules={{required: true}}
-                    />
-                    {errors.email && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
-                </View>
-                <View style={styles.contentView}>
-                    <Controller
-                        control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
-                            <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -166,14 +145,14 @@ export default function CreateUser({ navigation }) {
                         name="uf"
                         rules={{required: true}}
                     />
-                    {errors.uf && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.uf && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -184,14 +163,14 @@ export default function CreateUser({ navigation }) {
                         name="cidade"
                         rules={{required: true}}
                     />
-                    {errors.cidade && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.cidade && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -202,14 +181,14 @@ export default function CreateUser({ navigation }) {
                         name="endereco"
                         rules={{required: true}}
                     />
-                    {errors.endereco && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.endereco && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -221,19 +200,19 @@ export default function CreateUser({ navigation }) {
                         name="telefone"
                         rules={{required: true}}
                     />
-                    {errors.telefone && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.telefone && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View>
-                    <Text style={styles.text}>
+                    <Text style={signup.text}>
                         INFORMAÇÕES DE PERFIL
                     </Text>
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -245,57 +224,59 @@ export default function CreateUser({ navigation }) {
                         name="email"
                         rules={{required: true}}
                     />
-                    {errors.email && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.email && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Senha"
                                 keyboardType={"visible-password"}
+                                secureTextEntry={true}
                             />
                         )}
                         name="password"
                         rules={{required: true}}
                     />
-                    {errors.password && <Text style={styles.colorError}>Este campo deve ser preenchido</Text>}
+                    {errors.password && <Text style={signup.colorError}>Este campo deve ser preenchido</Text>}
                 </View>
-                <View style={styles.contentView}>
+                <View style={signup.contentView}>
                     <Controller
                         control={control}
                         render={({field: {onChange, onBlur, value}}) => (
                             <TextInput
-                                style={styles.input}
+                                style={signup.input}
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
                                 placeholderTextColor={'#bdbdbd'}
                                 placeholder="Confirmação de Senha"
                                 keyboardType={"visible-password"}
+                                secureTextEntry={true}
                             />
                         )}
                         name="passwdConfirm"
                         rules={{required: true}}
                     />
-                    {errors.passwdConfirm && <Text style={styles.colorError}>Este campo deve ser preenchido.</Text>}
+                    {errors.passwdConfirm && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
                 </View>
                 <View>
-                    <Text style={styles.text}>
+                    <Text style={signup.text}>
                         FOTO DE PERFIL
                     </Text>
                 </View>
-                <View style={styles.imgPerfil}>
+                <View style={signup.imgPerfil}>
                     <TouchableOpacity onPress={pickImage}>
                         {imgShow}
                     </TouchableOpacity>
                 </View>
-                <View style={styles.buttonEntrar}>
+                <View style={signup.buttonEntrar}>
                     <Pressable onPress={handleSubmit(onSubmit)}>
                         <Button color="green" texto="FAZER CADASTRO"/>
                     </Pressable>
@@ -304,68 +285,3 @@ export default function CreateUser({ navigation }) {
         </ScrollView>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        marginLeft: 16,
-        marginRight: 16,
-        marginTop: 16,
-    },
-    contentView: {
-        marginTop: 25,
-        width: '100%'
-    },
-    img: {
-        width: 112,
-        height: 112,
-        borderRadius: 100,
-    },
-    imgPerfil: {
-        width: '100%',
-        alignItems: "center",
-        marginTop: 32
-    },
-    notification: {
-        borderRadius: 4,
-        backgroundColor: '#cfe9e5',
-        height: 80,
-        width: '100%',
-        padding: 8
-    },
-    text: {
-        marginTop: 28,
-        color: '#589B9B'
-    },
-    subText: {
-        color: '#757575'
-    },
-    buttonEntrar: {
-        width: '100%',
-        alignItems: "center",
-        marginTop: 32,
-        marginBottom: 32
-    },
-    colorError: {
-        color: '#8A0303'
-    },
-    input: {
-        fontSize: 14,
-        height: 40,
-        width: '100%',
-        borderBottomWidth: 0.8,
-        borderBottomColor: "#e6e7e8",
-        padding: 10,
-    },
-    containerCenter: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    imagePicker: {
-        width: 312,
-        height: 128,
-        backgroundColor: "#f1f2f2"
-    }
-});

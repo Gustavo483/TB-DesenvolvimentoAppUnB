@@ -1,12 +1,11 @@
 import {View, Text, StyleSheet, Pressable} from "react-native";
 import React from "react";
 import {StatusBar} from "expo-status-bar";
-import {FIREBASE_AUTH} from "../../firebaseConfig";
-export default function Home({navigation}) {
+import {auth} from "../../config/firebaseConfig";
 
-    const auth = FIREBASE_AUTH.currentUser
+export default function Home({navigation}) {
     const signOut = async () => {
-            await FIREBASE_AUTH.signOut()
+            await auth.signOut()
                 .then(navigation.navigate('Login'))
                 .catch((error) => {
                     const errorCode = error.code;
@@ -16,6 +15,7 @@ export default function Home({navigation}) {
                 });
 
     }
+
     return (
         <View style={styles.container}>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
@@ -24,13 +24,13 @@ export default function Home({navigation}) {
                 <Text style={styles.standardButtonText}>LOGIN</Text>
             </Pressable>) : (<Text style={styles.standardButtonText}></Text>)}
 
-            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('CadastroAnimais')}>
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Create')}>
                 <Text style={styles.standardButtonText}>CADASTRO DE ANIMAIS</Text>
             </Pressable>
-            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('CreateUser')}>
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Signup')}>
                 <Text style={styles.standardButtonText}>REGISTRAR USUÁRIO</Text>
             </Pressable>
-            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('ShowUser')}>
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Profile')}>
                 <Text style={styles.standardButtonText}>PERFIL DE USUÁRIO</Text>
             </Pressable>
 

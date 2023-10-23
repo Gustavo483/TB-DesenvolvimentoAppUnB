@@ -1,42 +1,34 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
-import Login from "./app/autentication/login";
-import CreateUser from "./app/user/createUser";
-import ShowUser from "./app/user/showUser";
-import CadastroAnimais from "./app/cadastros/cadastroAnimais";
-import Home from "./app/hub/home";
-import React, {useEffect} from "react";
-import * as SplashScreen from "expo-splash-screen";
+import {useEffect, useState} from "react";
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import { Roboto_400Regular, Roboto_500Medium, useFonts } from "@expo-google-fonts/roboto";
 import { Courgette_400Regular } from "@expo-google-fonts/courgette";
-import {FIREBASE_AUTH} from "./firebaseConfig";
+import { navigation } from "./styles/global";
+import { auth } from "./config/firebaseConfig";
+import * as SplashScreen from "expo-splash-screen";
+import Login from "./app/autentication/login";
+import Signup from "./app/user/signup";
+import Profile from "./app/user/profile";
+import Create from "./app/pet/create";
+import Home from "./app/hub/home";
 
 const Stack = createStackNavigator();
 
-const options: StackNavigationOptions = {
-    headerStyle: {
-        backgroundColor: '#CFE9E5'
-    },
-    headerTitleStyle: {
-        fontFamily: 'Roboto_500Medium',
-    }
-};
-
 function MyStack() {
-    const initialRoute  = FIREBASE_AUTH.currentUser ? 'Home' : 'Login'
-  return (
-      <Stack.Navigator initialRouteName={initialRoute}>
-        <Stack.Screen options={options} name="Home" component={Home} />
-        <Stack.Screen options={options} name="Login" component={Login} />
-        <Stack.Screen options={options} name="CreateUser" component={CreateUser} />
-        <Stack.Screen options={options} name="CadastroAnimais" component={CadastroAnimais} />
-        <Stack.Screen options={options} name="ShowUser" component={ShowUser} />
-      </Stack.Navigator>
-  );
+    const initialRoute  = auth.currentUser ? 'Home' : 'Login'
+    return (
+        <Stack.Navigator initialRouteName={initialRoute}>
+            <Stack.Screen options={navigation} name="Home" component={Home} />
+            <Stack.Screen options={navigation} name="Login" component={Login} />
+            <Stack.Screen options={navigation} name="Signup" component={Signup} />
+            <Stack.Screen options={navigation} name="Create" component={Create} />
+            <Stack.Screen options={navigation} name="Profile" component={Profile} />
+        </Stack.Navigator>
+    );
 }
 
 export default function App({navigation}) {
-    const [isReady, setIsReady] = React.useState(false);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         SplashScreen.preventAutoHideAsync()

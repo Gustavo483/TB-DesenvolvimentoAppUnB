@@ -1,43 +1,62 @@
 import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
-import Menu from '../../components/menus/menuTopo'
 import {StatusBar} from "expo-status-bar";
-import splash from '../../assets/icon.png';
 import Button from "../../components/buttons/buttonsPadroes";
+import {auth, fs} from "../../config/firebaseConfig";
+import {collection, getDocs, query, where} from "firebase/firestore";
+import {useState} from "react";
 
-export default function ShowUser({ navigation }) {
+export default function Profile({navigation}) {
+
+    const splash = require('../../assets/icon.png');
+    const [userData, setUserData] = useState(null);
+
+    getDocs(query(collection(fs, "users"), where('uid', '==', auth.currentUser.uid)))
+        .then((snapshot) => {
+            if (snapshot.empty) {
+                console.log('No matching documents.');
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                setUserData(doc.data());
+            });
+
+        }).catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <View style={styles.container}>
                 <Image source={splash} style={styles.img}></Image>
-                <Text style={{fontWeight: 'bold'}}>Marilia Martins</Text>
+                <Text style={{fontWeight: 'bold'}}>{userData ? userData.nome : ''}</Text>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>NOME COMPLETO</Text>
-                    <Text style={styles.subText}>Marilia Martins de Souza</Text>
+                    <Text style={styles.subText}>{userData ? userData.nome : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>IDADE</Text>
-                    <Text style={styles.subText}>27 anos</Text>
+                    <Text style={styles.subText}>{userData ? userData.idade : ''} anos</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>EMAIL</Text>
-                    <Text style={styles.subText}>marilia_martins@gmail.com</Text>
+                    <Text style={styles.subText}>{userData ? userData.email : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>LOCALIZAÇÃO</Text>
-                    <Text style={styles.subText}>Sobradinho - Distrito Federal</Text>
+                    <Text style={styles.subText}>{userData ? userData.cidade : ''} - {userData ? userData.uf : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>ENDEREÇO</Text>
-                    <Text style={styles.subText}>RUA 203, conjunto B, casa 37</Text>
+                    <Text style={styles.subText}>{userData ? userData.endereco : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>TELEFONE</Text>
-                    <Text style={styles.subText}>(61) 9 9106-9393</Text>
+                    <Text style={styles.subText}>{userData ? userData.telefone : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>NOME DE USUÁRIO</Text>
-                    <Text style={styles.subText}>mari_martins</Text>
+                    <Text style={styles.subText}>{userData ? userData.email : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>HISTÓRICO</Text>
