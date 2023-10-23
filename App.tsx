@@ -1,15 +1,15 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import Login from "./app/autentication/login";
-import CreateUser from "./app/user/createUser";
-import ShowUser from "./app/user/showUser";
-import CadastroAnimais from "./app/cadastros/cadastroAnimais";
+import Signup from "./app/user/signup";
+import Profile from "./app/user/profile";
+import Create from "./app/pet/create";
 import Home from "./app/hub/home";
 import React, {useEffect} from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { Roboto_400Regular, Roboto_500Medium, useFonts } from "@expo-google-fonts/roboto";
 import { Courgette_400Regular } from "@expo-google-fonts/courgette";
-import {FIREBASE_AUTH} from "./firebaseConfig";
+import { auth } from "./config/firebaseConfig";
 
 const Stack = createStackNavigator();
 
@@ -23,16 +23,16 @@ const options: StackNavigationOptions = {
 };
 
 function MyStack() {
-    const initialRoute  = FIREBASE_AUTH.currentUser ? 'Home' : 'Login'
-  return (
-      <Stack.Navigator initialRouteName={initialRoute}>
-        <Stack.Screen options={options} name="Home" component={Home} />
-        <Stack.Screen options={options} name="Login" component={Login} />
-        <Stack.Screen options={options} name="CreateUser" component={CreateUser} />
-        <Stack.Screen options={options} name="CadastroAnimais" component={CadastroAnimais} />
-        <Stack.Screen options={options} name="ShowUser" component={ShowUser} />
-      </Stack.Navigator>
-  );
+    const initialRoute  = auth.currentUser ? 'Home' : 'Login'
+    return (
+        <Stack.Navigator initialRouteName={initialRoute}>
+            <Stack.Screen options={options} name="Home" component={Home} />
+            <Stack.Screen options={options} name="Login" component={Login} />
+            <Stack.Screen options={options} name="CreateUser" component={Signup} />
+            <Stack.Screen options={options} name="CadastroAnimais" component={Create} />
+            <Stack.Screen options={options} name="ShowUser" component={Profile} />
+        </Stack.Navigator>
+    );
 }
 
 export default function App({navigation}) {

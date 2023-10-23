@@ -4,11 +4,11 @@ import * as ImagePicker from "expo-image-picker";
 import React, {useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Button from "../../components/buttons/buttonsPadroes";
-import { auth, fs } from "../../firebaseConfig";
+import { auth, fs } from "../../config/firebaseConfig";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 
-export default function CreateUser({ navigation }) {
+export default function Signup({ navigation }) {
     const [image, setImage] = useState(null);
 
     const { control, handleSubmit, formState: { errors } } = useForm({

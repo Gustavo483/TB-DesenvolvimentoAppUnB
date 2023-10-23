@@ -2,18 +2,17 @@ import {StatusBar} from 'expo-status-bar';
 import {Pressable, StyleSheet, View} from 'react-native';
 import Input from "../../components/inputs/inputPadrao";
 import Button from "../../components/buttons/buttonsPadroes";
-import React, {useState} from "react";
-import {signInWithEmailAndPassword} from "@firebase/auth";
-import {FIREBASE_AUTH} from "../../firebaseConfig";
-import CreateUser from "../user/createUser";
+import {useState} from "react";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../../config/firebaseConfig";
 
 export default function Login({ navigation,setUser }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const signIn = async () => {
-        signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
+        signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
-                if (FIREBASE_AUTH.currentUser){
+                if (auth.currentUser){
                     navigation.navigate('Home');
                 }
             })
@@ -39,7 +38,7 @@ export default function Login({ navigation,setUser }) {
                 </Pressable>
             </View>
             <View style={styles.buttonEntrar}>
-                <Pressable onPress={() => navigation.navigate('CreateUser')}>
+                <Pressable onPress={() => navigation.navigate('Signup')}>
                     <Button color="green" texto="CADASTRAR-SE"/>
                 </Pressable>
             </View>

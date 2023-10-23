@@ -1,16 +1,16 @@
 import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
-import Menu from '../../components/menus/menuTopo'
 import {StatusBar} from "expo-status-bar";
-import splash from '../../assets/icon.png';
 import Button from "../../components/buttons/buttonsPadroes";
-import {FIREBASE_AUTH, fs} from "../../firebaseConfig";
+import {auth, fs} from "../../config/firebaseConfig";
 import {collection, getDocs, query, where} from "firebase/firestore";
 import {useState} from "react";
 
-export default function ShowUser({navigation}) {
+export default function Profile({navigation}) {
+
+    const splash = require('../../assets/icon.png');
     const [userData, setUserData] = useState(null);
 
-    getDocs(query(collection(fs, "users"), where('uid', '==', FIREBASE_AUTH.currentUser.uid)))
+    getDocs(query(collection(fs, "users"), where('uid', '==', auth.currentUser.uid)))
         .then((snapshot) => {
             if (snapshot.empty) {
                 console.log('No matching documents.');

@@ -6,7 +6,7 @@ import DefaultRadio from "../../components/inputs/radioPadrao";
 import React from "react";
 import * as ImagePicker from "expo-image-picker";
 
-export default function CadastroAnimais() {
+export default function Create() {
     const [image, setImage] = React.useState(null);
 
     const pickImage = async () => {
@@ -43,7 +43,7 @@ export default function CadastroAnimais() {
                         <Text style={styles.headerText}>Adoção</Text>
 
                         <Text style={styles.label}>NOME DO ANIMAL</Text>
-                        <Input placeholder='Nome do animal'/>
+                        <Input placeholder='Nome do animal' onTextChange={undefined}/>
 
                         <Text style={styles.label}>FOTOS DO ANIMAL</Text>
                         <Pressable style={[styles.containerCenter, styles.imagePicker]} onPress={pickImage}>
@@ -83,7 +83,7 @@ export default function CadastroAnimais() {
                             <DefaultCheckbox name="Castrado"></DefaultCheckbox>
                             <DefaultCheckbox name="Doente"></DefaultCheckbox>
                         </View>
-                        <Input placeholder='Doenças do animal'/>
+                        <Input placeholder='Doenças do animal' onTextChange={undefined}/>
 
                         <Text style={styles.label}>EXIGÊNCIAS PARA ADOÇÃO</Text>
                         <View style={styles.section}>
@@ -109,7 +109,7 @@ export default function CadastroAnimais() {
                         </View>
 
                         <Text style={styles.label}>SOBRE O ANIMAL</Text>
-                        <Input placeholder='Compartilhe a história do animal'/>
+                        <Input placeholder='Compartilhe a história do animal' onTextChange={undefined}/>
                     </View>
 
                     <View style={styles.containerCenter}>
