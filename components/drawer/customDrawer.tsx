@@ -7,7 +7,7 @@ const name: string = auth.currentUser.email //TROCAR PARA NOME
 
 const signOut = async () => {
     await auth.signOut()
-        .then(()=>{
+        .then(() => {
             //Ajustar o caso de sucesso de Logout
         })
         .catch((error) => {
