@@ -1,6 +1,6 @@
-import {useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {StatusBar} from 'expo-status-bar';
-import {View, Text, Pressable, ScrollView, TextInput} from 'react-native';
+import {View, Text, Pressable, ScrollView, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import * as ImagePicker from "expo-image-picker";
 import Input from "../../components/inputs/inputPadrao";
 import DefaultCheckbox from "../../components/inputs/checkboxPadrao";
@@ -9,6 +9,8 @@ import {Controller, useForm} from "react-hook-form";
 import {addDoc, collection} from "firebase/firestore";
 import {fs} from "../../config/firebaseConfig";
 import {pet, signup} from "../../styles/global";
+import RadioButtonGroup, {RadioButtonItem} from "expo-radio-button";
+import {Checkbox} from "expo-checkbox";
 
 export default function Create({navigation}) {
     const [image, setImage] = useState(null);
@@ -22,11 +24,11 @@ export default function Create({navigation}) {
             idade :'',
             temperamento :'',
             saude :'',
-            doencas :'',
+            descricaoDoencas:'',
             exigencias :'',
-            descricao :''
-        }
-    });
+            descricao :'',
+            tempoAcompanhamentoAposAdocao: '',
+        }});
 
     const onSubmit = async data => {
         console.log(data)
@@ -38,13 +40,15 @@ export default function Create({navigation}) {
             idade :data.idade,
             temperamento :data.temperamento,
             saude :data.saude,
-            doencas :data.doencas,
+            descricaoDoencas : data.descricaoDoencas,
             exigencias :data.exigencias,
+            tempoAcompanhamentoAposAdocao :data.tempoAcompanhamentoAposAdocao,
             descricao :data.descricao
         });
         navigation.navigate('Home')
     }
 
+    const [current, setCurrent] = React.useState("");
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -106,65 +110,170 @@ export default function Create({navigation}) {
                         </Pressable>
 
                         <Text style={pet.label}>ESPÉCIE</Text>
-                        <DefaultRadio items={["Cachorro", "Gato"]}></DefaultRadio>
+                        <Controller
+                            name="especie"
+                            control={control}
+                            defaultValue=""
+                            render={({ field: { onChange, value } }) => (
+                                <RadioButtonGroup
+                                    containerStyle={styles.rowContainerLeft}
+                                    selected={value}
+                                    onSelected={(selectedValue) => onChange(selectedValue)}
+                                    containerOptionStyle={{margin:5}}
+                                    radioBackground="#ffd358"
+                                >
+                                    {['gato', 'cachorro'].map((option, index) => (
+                                        <RadioButtonItem   key={index.toString()} label={option} value={option.toLowerCase()} />
+                                    ))}
+                                </RadioButtonGroup>
+                            )}
+                        />
 
                         <Text style={pet.label}>SEXO</Text>
-                        <DefaultRadio items={["Macho", "Femea"]}></DefaultRadio>
+                        <Controller
+                            name="sexo"
+                            control={control}
+                            defaultValue=""
+                            render={({ field: { onChange, value } }) => (
+                                <RadioButtonGroup
+                                    containerStyle={styles.rowContainerLeft}
+                                    selected={value}
+                                    onSelected={(selectedValue) => onChange(selectedValue)}
+                                    containerOptionStyle={{margin:5}}
+                                    radioBackground="#ffd358"
+                                >
+                                    {["Macho", "Femea"].map((option, index) => (
+                                        <RadioButtonItem   key={index.toString()} label={option} value={option.toLowerCase()} />
+                                    ))}
+                                </RadioButtonGroup>
+                            )}
+                        />
 
                         <Text style={pet.label}>PORTE</Text>
-                        <DefaultRadio items={["Pequeno", "Medio", "Grande"]}></DefaultRadio>
+                        <Controller
+                            name="porte"
+                            control={control}
+                            defaultValue=""
+                            render={({ field: { onChange, value } }) => (
+                                <RadioButtonGroup
+                                    containerStyle={styles.rowContainerLeft}
+                                    selected={value}
+                                    onSelected={(selectedValue) => onChange(selectedValue)}
+                                    containerOptionStyle={{margin:5}}
+                                    radioBackground="#ffd358"
+                                >
+                                    {["Pequeno", "Medio", "Grande"].map((option, index) => (
+                                        <RadioButtonItem   key={index.toString()} label={option} value={option.toLowerCase()} />
+                                    ))}
+                                </RadioButtonGroup>
+                            )}
+                        />
 
                         <Text style={pet.label}>IDADE</Text>
-                        <DefaultRadio items={["Filhote", "Adulto", "Idoso"]}></DefaultRadio>
+                        <Controller
+                            name="idade"
+                            control={control}
+                            defaultValue=""
+                            render={({ field: { onChange, value } }) => (
+                                <RadioButtonGroup
+                                    containerStyle={styles.rowContainerLeft}
+                                    selected={value}
+                                    onSelected={(selectedValue) => onChange(selectedValue)}
+                                    containerOptionStyle={{margin:5}}
+                                    radioBackground="#ffd358"
+                                >
+                                    {["Filhote", "Adulto", "Idoso"].map((option, index) => (
+                                        <RadioButtonItem   key={index.toString()} label={option} value={option.toLowerCase()} />
+                                    ))}
+                                </RadioButtonGroup>
+                            )}
+                        />
 
                         <Text style={pet.label}>TEMPERAMENTO</Text>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Brincalhão"></DefaultCheckbox>
-                            <DefaultCheckbox name="Tímido"></DefaultCheckbox>
-                            <DefaultCheckbox name="Calmo"></DefaultCheckbox>
+                            <DefaultCheckbox name="temperamento.Brincalhão" secondary="false" control={control} label="Brincalhão" />
+                            <DefaultCheckbox name="temperamento.Tímido" secondary="false" control={control} label="Tímido" />
+                            <DefaultCheckbox name="temperamento.Calmo" secondary="false" control={control} label="Calmo" />
                         </View>
+
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Guarda"></DefaultCheckbox>
-                            <DefaultCheckbox name="Amoroso"></DefaultCheckbox>
-                            <DefaultCheckbox name="Preguiçoso"></DefaultCheckbox>
+                            <DefaultCheckbox name="temperamento.Guarda" secondary="false" control={control} label="Guarda" />
+                            <DefaultCheckbox name="temperamento.Amoroso" secondary="false" control={control} label="Amoroso" />
+                            <DefaultCheckbox name="temperamento.Preguiçoso" secondary="false" control={control} label="Preguiçoso" />
                         </View>
 
                         <Text style={pet.label}>SAÚDE</Text>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Vacinado"></DefaultCheckbox>
-                            <DefaultCheckbox name="Vermifugado"></DefaultCheckbox>
+                            <DefaultCheckbox name="saude.Vacinado" secondary="false" control={control} label="Vacinado" />
+                            <DefaultCheckbox name="saude.Vermifugado" secondary="false" control={control} label="Vermifugado" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Castrado"></DefaultCheckbox>
-                            <DefaultCheckbox name="Doente"></DefaultCheckbox>
+                            <DefaultCheckbox name="saude.Castrado" secondary="false" control={control} label="Castrado" />
+                            <DefaultCheckbox name="saude.Doente" secondary="false" control={control} label="Doente" />
                         </View>
-                        <Input placeholder='Doenças do animal' onTextChange={undefined}/>
+
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true,
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={pet.input}
+                                    placeholder="descrição Doenças"
+                                    onBlur={onBlur}
+                                    placeholderTextColor={'#bdbdbd'}
+                                    onChangeText={onChange}
+                                    value={value}
+                                />
+                            )}
+                            name="descricaoDoencas"
+                        />
+                        {errors.descricaoDoencas && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
 
                         <Text style={pet.label}>EXIGÊNCIAS PARA ADOÇÃO</Text>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Termo de adoção"></DefaultCheckbox>
+                            <DefaultCheckbox name="exigencias.Termo de adoção" control={control} secondary="false" label="Termo de adoção" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Fotos da casa"></DefaultCheckbox>
+                            <DefaultCheckbox name="exigencias.Fotos da casa" control={control} secondary="false" label="Fotos da casa" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Visita prévia ao animal"></DefaultCheckbox>
+                            <DefaultCheckbox name="exigencias.Visita prévia ao animal" control={control} secondary="false" label="Visita prévia ao animal" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="Acompanhamento após adoção"></DefaultCheckbox>
+                            <DefaultCheckbox name="exigencias.Acompanhamento após adoção" control={control} secondary="false"  label="Acompanhamento após adoção" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="1 mês" secondary="true"></DefaultCheckbox>
+                            <DefaultCheckbox name="tempoAcompanhamentoAposAdocao.1 mês" secondary="true" control={control} label="1 mês" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="3 meses" secondary="true"></DefaultCheckbox>
+                            <DefaultCheckbox name="tempoAcompanhamentoAposAdocao.3 meses" secondary="true" control={control} label="3 meses" />
                         </View>
                         <View style={pet.section}>
-                            <DefaultCheckbox name="6 meses" secondary="true"></DefaultCheckbox>
+                            <DefaultCheckbox name="tempoAcompanhamentoAposAdocao.6 meses" secondary="true" control={control} label="6 meses" />
                         </View>
 
                         <Text style={pet.label}>SOBRE O ANIMAL</Text>
-                        <Input placeholder='Compartilhe a história do animal' onTextChange={undefined}/>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true,
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={pet.input}
+                                    placeholder="Compartilhe a história do animal"
+                                    onBlur={onBlur}
+                                    placeholderTextColor={'#bdbdbd'}
+                                    onChangeText={onChange}
+                                    value={value}
+                                />
+                            )}
+                            name="descricao"
+                        />
+                        {errors.descricao && <Text style={signup.colorError}>Este campo deve ser preenchido.</Text>}
+
                     </View>
 
                     <View style={pet.containerCenter}>
@@ -177,3 +286,10 @@ export default function Create({navigation}) {
         </>
     );
 }
+const styles = StyleSheet.create({
+    rowContainerLeft:{
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+});
+
