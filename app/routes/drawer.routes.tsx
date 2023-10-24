@@ -24,7 +24,7 @@ export default function DrawerRoutes() {
                 }}
             />
             <Drawer.Screen
-                name={"Meu Perfil"}
+                name={"Profile"}
                 component={Profile}
                 options={{
                     drawerLabel: 'Meu Perfil'

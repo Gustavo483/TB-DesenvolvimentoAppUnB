@@ -1,25 +1,38 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {DrawerContentScrollView, DrawerItemList} from "@react-navigation/drawer";
-import {Image, ImageBackground, Text, TouchableOpacity, View} from "react-native";
+import {Image, ImageBackground, Pressable, Text, View} from "react-native";
 import {auth} from "../../config/firebaseConfig";
-
-const name: string = auth.currentUser.email //TROCAR PARA NOME
-
-const signOut = async () => {
-    await auth.signOut()
-        .then(() => {
-            //Ajustar o caso de sucesso de Logout
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode);
-            console.log(errorMessage);
-        });
-
-}
+import {useNavigation} from "@react-navigation/native";
 
 const CustomDrawer = (props) => {
+    const [user, setUser] = useState(null);
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
+    const name: string = user ? user.email : 'Usuário Desconhecido';
+
+    const signOut = async () => {
+        await auth.signOut()
+            .then(() => {
+                navigation.navigate('Login');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+            });
+    }
+
     return (
         <View style={{flex: 1}}>
             <DrawerContentScrollView {...props} contentContainerStyle={{backgroundColor: '#88c9bf'}}>
@@ -36,16 +49,16 @@ const CustomDrawer = (props) => {
                     <Text style={{color: '#434343', fontSize: 14}}>{name}</Text>
                 </ImageBackground>
                 <View style={{flex: 1, backgroundColor: '#f7f7f7', paddingTop: 16}}>
-                    <DrawerItemList {...props}/>
+                    <DrawerItemList {...props} />
                 </View>
             </DrawerContentScrollView>
             <View style={{padding: 20, backgroundColor: '#88c9bf', alignItems: 'center'}}>
-                <TouchableOpacity onPress={() => signOut()}>
+                <Pressable onPress={() => signOut()}>
                     <Text>SAIR</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
         </View>
     )
 }
 
-export default CustomDrawer
+export default CustomDrawer;
