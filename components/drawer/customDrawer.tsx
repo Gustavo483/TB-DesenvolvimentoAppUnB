@@ -1,36 +1,26 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {DrawerContentScrollView, DrawerItemList} from "@react-navigation/drawer";
 import {Image, ImageBackground, Pressable, Text, View} from "react-native";
-import {auth} from "../../config/firebaseConfig";
 import {useNavigation} from "@react-navigation/native";
+import {signOut, useAuth, User} from "../../app/hooks/useAuth";
 
 const CustomDrawer = (props) => {
-    const [user, setUser] = useState(null);
     const navigation = useNavigation();
+    const {user} = useAuth()
+    const {userData} = User()
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            setUser(user);
-        });
+    let name: string = "";
+    let logout = null;
 
-        return () => {
-            unsubscribe();
-        };
-    }, []);
+    if (user) {
+        logout =
+            <View style={{padding: 20, backgroundColor: '#88c9bf', alignItems: 'center'}}>
+                <Pressable onPress={signOut(navigation)}>
+                    <Text>SAIR</Text>
+                </Pressable>
+            </View>;
 
-    const name: string = user ? user.email : 'Usuário Desconhecido';
-
-    const signOut = async () => {
-        await auth.signOut()
-            .then(() => {
-                navigation.navigate('Login' as never);
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode);
-                console.log(errorMessage);
-            });
+        name = userData?.nome || '';
     }
 
     return (
@@ -52,11 +42,7 @@ const CustomDrawer = (props) => {
                     <DrawerItemList {...props} />
                 </View>
             </DrawerContentScrollView>
-            <View style={{padding: 20, backgroundColor: '#88c9bf', alignItems: 'center'}}>
-                <Pressable onPress={() => signOut()}>
-                    <Text>SAIR</Text>
-                </Pressable>
-            </View>
+            {logout}
         </View>
     )
 }
