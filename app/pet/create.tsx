@@ -1,16 +1,13 @@
-import React, {ReactNode, useState} from "react";
+import {useState} from "react";
 import {StatusBar} from 'expo-status-bar';
-import {View, Text, Pressable, ScrollView, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, Pressable, ScrollView, TextInput, StyleSheet} from 'react-native';
 import * as ImagePicker from "expo-image-picker";
-import Input from "../../components/inputs/inputPadrao";
 import DefaultCheckbox from "../../components/inputs/checkboxPadrao";
-import DefaultRadio from "../../components/inputs/radioPadrao";
 import {Controller, useForm} from "react-hook-form";
 import {addDoc, collection} from "firebase/firestore";
-import {fs} from "../../config/firebaseConfig";
+import {auth, fs} from "../../config/firebaseConfig";
 import {pet, signup} from "../../styles/global";
 import RadioButtonGroup, {RadioButtonItem} from "expo-radio-button";
-import {Checkbox} from "expo-checkbox";
 
 export default function Create({navigation}) {
     const [image, setImage] = useState(null);
@@ -18,37 +15,39 @@ export default function Create({navigation}) {
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             nome: '',
-            especie :'',
-            sexo :'',
-            porte :'',
-            idade :'',
-            temperamento :'',
-            saude :'',
-            descricaoDoencas:'',
-            exigencias :'',
-            descricao :'',
+            especie: '',
+            sexo: '',
+            porte: '',
+            idade: '',
+            temperamento: '',
+            saude: '',
+            descricaoDoencas: '',
+            exigencias: '',
+            descricao: '',
             tempoAcompanhamentoAposAdocao: '',
+            idDono: ''
         }});
 
     const onSubmit = async data => {
         console.log(data)
         const docRef = await addDoc(collection(fs, "pets"), {
             nome: data.nome,
-            especie :data.especie,
-            sexo :data.sexo,
-            porte :data.porte,
-            idade :data.idade,
-            temperamento :data.temperamento,
-            saude :data.saude,
-            descricaoDoencas : data.descricaoDoencas,
-            exigencias :data.exigencias,
-            tempoAcompanhamentoAposAdocao :data.tempoAcompanhamentoAposAdocao,
-            descricao :data.descricao
+            especie: data.especie,
+            sexo: data.sexo,
+            porte: data.porte,
+            idade: data.idade,
+            temperamento: data.temperamento,
+            saude: data.saude,
+            descricaoDoencas: data.descricaoDoencas,
+            exigencias: data.exigencias,
+            tempoAcompanhamentoAposAdocao: data.tempoAcompanhamentoAposAdocao,
+            descricao: data.descricao,
+            idDono: auth.currentUser.uid
         });
         navigation.navigate('Home')
     }
 
-    const [current, setCurrent] = React.useState("");
+    const [current, setCurrent] = useState("");
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
