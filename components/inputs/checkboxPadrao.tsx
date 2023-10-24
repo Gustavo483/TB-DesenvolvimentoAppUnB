@@ -1,25 +1,28 @@
-import {StyleSheet, Text} from 'react-native';
-import {Checkbox} from "expo-checkbox";
 import React from "react";
+import {View, Text, StyleSheet} from "react-native";
+import {Checkbox} from "expo-checkbox";
+import { Controller } from 'react-hook-form';
 
-type DefaultCheckboxProps = {
-    name: string;
-    secondary?: string;
-}
-
-export default function DefaultCheckbox({name, secondary}: DefaultCheckboxProps) {
-    const [isChecked, setChecked] = React.useState(false);
+export default function DefaultCheckbox({ name, control, label,secondary }) {
     return (
-        <><Checkbox
-            style={[styles.checkbox, secondary==="true" ? styles.secondaryCheckbox : {} ]}
-            value={isChecked}
-            onValueChange={setChecked}
-            color={isChecked ? '#ffd358' : undefined}/>
-            <Text>{name}</Text>
-        </>
+        <Controller
+            name={name}
+            control={control}
+            defaultValue={false}
+            render={({ field: { onChange, value } }) => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Checkbox
+                        style={[styles.checkbox, secondary==="true" ? styles.secondaryCheckbox : {} ]}
+                        value={value}
+                        onValueChange={newValue => onChange(newValue)}
+                        color={'#ffd358'}
+                    />
+                    <Text>{label}</Text>
+                </View>
+            )}
+        />
     );
-}
-
+};
 const styles = StyleSheet.create({
     checkbox: {
         margin: 8
