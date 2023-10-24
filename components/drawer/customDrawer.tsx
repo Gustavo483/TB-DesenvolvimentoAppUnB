@@ -23,7 +23,7 @@ const CustomDrawer = (props) => {
     const signOut = async () => {
         await auth.signOut()
             .then(() => {
-                navigation.navigate('Login');
+                navigation.navigate('Login' as never);
             })
             .catch((error) => {
                 const errorCode = error.code;
