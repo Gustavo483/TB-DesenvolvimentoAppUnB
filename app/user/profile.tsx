@@ -1,29 +1,13 @@
 import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import Button from "../../components/buttons/buttonsPadroes";
-import {auth, fs} from "../../config/firebaseConfig";
-import {collection, getDocs, query, where} from "firebase/firestore";
-import {useState} from "react";
+import {User} from "../hooks/useAuth";
 
-export default function Profile({navigation}) {
+export default function Profile() {
 
     const splash = require('../../assets/icon.png');
-    const [userData, setUserData] = useState(null);
+    const {userData} = User()
 
-    getDocs(query(collection(fs, "users"), where('uid', '==', auth.currentUser.uid)))
-        .then((snapshot) => {
-            if (snapshot.empty) {
-                console.log('No matching documents.');
-                return;
-            }
-
-            snapshot.forEach((doc) => {
-                setUserData(doc.data());
-            });
-
-        }).catch((error) => {
-            console.log("Error getting documents: ", error);
-        });
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
@@ -44,7 +28,8 @@ export default function Profile({navigation}) {
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>LOCALIZAÇÃO</Text>
-                    <Text style={styles.subText}>{userData ? userData.cidade : ''} - {userData ? userData.uf : ''}</Text>
+                    <Text
+                        style={styles.subText}>{userData ? userData.cidade : ''} - {userData ? userData.uf : ''}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>ENDEREÇO</Text>
@@ -75,7 +60,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     contentView: {
-        alignItems:"center",
+        alignItems: "center",
         marginTop: 25
     },
     img: {
@@ -83,10 +68,10 @@ const styles = StyleSheet.create({
         height: 112,
         borderRadius: 100,
     },
-    text:{
+    text: {
         color: '#589B9B'
     },
-    subText:{
+    subText: {
         color: '#757575'
     },
     buttonEntrar: {
