@@ -2,7 +2,7 @@ import * as ImagePicker from "expo-image-picker";
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useState} from "react";
-import {collection, addDoc} from "firebase/firestore";
+import {setDoc, doc} from "firebase/firestore";
 import {createUserWithEmailAndPassword} from "@firebase/auth";
 import {Controller, useForm} from "react-hook-form";
 import {auth, fs} from "../../config/firebaseConfig";
@@ -30,8 +30,7 @@ export default function Signup({ navigation }) {
         createUserWithEmailAndPassword(auth, data.email, data.password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
-                const docRef = await addDoc(collection(fs, "users"), {
-                    uid: user.uid,
+                await setDoc(doc(fs, "users", user.uid), {
                     email: data.email,
                     nome : data.nome,
                     endereco : data.endereco,
