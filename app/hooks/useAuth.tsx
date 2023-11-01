@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {auth, fs} from "../../config/firebaseConfig";
-import {collection, getDocs, query, where} from "firebase/firestore";
+import {doc, getDoc} from "firebase/firestore";
 
 function useAuth() {
     const [user, setUser] = useState(null);
@@ -23,26 +23,20 @@ function User() {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const user = auth.currentUser;
-                if (user) {
-                    const querySnapshot =
-                        await getDocs(query(collection(fs, 'users'),
-                            where('uid', '==', auth.currentUser.uid)));
+            const user = auth.currentUser;
+            if (user) {
+                const docRef = doc(fs, "users", user.uid);
 
-                    if (querySnapshot.empty) {
-                        console.log('No matching documents.');
-                        return;
-                    }
-                    querySnapshot.forEach((doc) => {
-                        setUserData(doc.data());
-                    });
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    setUserData(docSnap.data());
+                    console.log("User data:", docSnap.data());
                 } else {
-                    console.log("Usuário não está autenticado.");
+                    console.log("No such user!");
                 }
-
-            } catch (error) {
-                console.error('Error getting documents:', error);
+            } else {
+                console.log("Usuário não está autenticado.");
             }
         };
 

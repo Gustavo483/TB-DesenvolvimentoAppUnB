@@ -22,10 +22,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f7a800"
-      }
+      },
+      "package": "com.singlehorizon.meau"
     },
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3b34bb55-6803-4ec0-9a1e-7d49749659c1"
+      }
     }
   }
 }
