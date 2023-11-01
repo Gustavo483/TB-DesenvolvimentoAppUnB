@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build on EAS
-        run: eas build --profile preview --non-interactive
+        run: eas build --platform android --profile preview --non-interactive
 
       - name: Create Release
         id: create_release
@@ -33,7 +33,6 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Changes in this Release
-            - First release
+            Android release
           draft: false
           prerelease: false
