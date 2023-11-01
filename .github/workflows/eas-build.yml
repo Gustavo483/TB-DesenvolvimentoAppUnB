@@ -8,6 +8,10 @@ jobs:
   build:
     name: Install and build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -18,11 +22,14 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
+          expo-version: latest
           token: 4sJgPXETkozBrw56t0Qio0Nbgs4eVSgZ5EytrfEe # TODO: This shouldn't be here
+      - name: 🏗 Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
       - name: Install dependencies
         run: npm ci
       - name: Build on EAS
-        run: eas build --platform android --profile preview --non-interactive
+        run: eas build --local --output=./app-build --platform android --profile preview --non-interactive
 
       - name: Create Release
         id: create_release
@@ -36,3 +43,19 @@ jobs:
             Android release
           draft: false
           prerelease: false
+
+      - name: 📱 Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-android
+          path: app-build
+
+      - name: Upload Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app-build/*.apk
+          asset_name: meau-gmw.apk
+          asset_content_type: application/vnd.android.package-archive
