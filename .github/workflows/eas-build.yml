@@ -18,8 +18,22 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
-          token: 4sJgPXETkozBrw56t0Qio0Nbgs4eVSgZ5EytrfEe
+          token: 4sJgPXETkozBrw56t0Qio0Nbgs4eVSgZ5EytrfEe # TODO: This shouldn't be here
       - name: Install dependencies
         run: npm ci
       - name: Build on EAS
-        run: eas build --platform all --non-interactive
+        run: eas build --profile preview --non-interactive
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First release
+          draft: false
+          prerelease: false
