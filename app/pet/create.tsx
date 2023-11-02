@@ -1,18 +1,19 @@
 import {useState} from "react";
 import {StatusBar} from 'expo-status-bar';
-import {View, Text, Pressable, ScrollView, TextInput, StyleSheet} from 'react-native';
+import {View, Text, Pressable, ScrollView, TextInput, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import * as ImagePicker from "expo-image-picker";
 import DefaultCheckbox from "../../components/inputs/checkboxPadrao";
 import {Controller, useForm} from "react-hook-form";
 import {addDoc, collection} from "firebase/firestore";
-import {auth, fs} from "../../config/firebaseConfig";
+import {auth, fs, st} from "../../config/firebaseConfig";
 import {pet, signup} from "../../styles/global";
 import RadioButtonGroup, {RadioButtonItem} from "expo-radio-button";
+import {ref, uploadBytes} from "@firebase/storage";
 
 export default function Create({navigation}) {
     const [image, setImage] = useState(null);
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm({
         defaultValues: {
             nome: '',
             especie: '',
@@ -25,7 +26,8 @@ export default function Create({navigation}) {
             exigencias: '',
             descricao: '',
             tempoAcompanhamentoAposAdocao: '',
-            idDono: ''
+            idDono: '',
+            foto: ''
         }});
 
     const onSubmit = async data => {
@@ -44,40 +46,56 @@ export default function Create({navigation}) {
             descricao: data.descricao,
             idDono: auth.currentUser.uid
         });
+
+        const blob = await fetch(data.foto).then(r => r.blob());
+        const storageRef = ref(st, 'pets/'+docRef.id+'.jpeg');
+        uploadBytes(storageRef, blob).then((snapshot) => {
+            console.log('Uploaded a blob or file!');
+        });
         navigation.navigate('Home')
     }
 
-    const [current, setCurrent] = useState("");
+    let imgShow;
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [4, 4],
             quality: 1,
         });
 
         if (!result.canceled) {
+            setValue("foto", result.assets[0].uri);
             setImage(result.assets[0].uri);
         }
     };
+
+    if (image) {
+        imgShow = <Image source={{uri: image}} style={signup.img}/>
+    } else {
+        imgShow =
+            <Pressable style={[signup.containerCenter, signup.imagePicker]} onPress={pickImage}>
+                <Text>adicionar fotos</Text>
+            </Pressable>
+    }
 
     return (
         <>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <ScrollView>
                 <View style={pet.container}>
-                    <Text style={pet.headerSelectionText}>Tenho interesse em cadastrar animal para:</Text>
-                    <View style={pet.rowContainer}>
-                        <Pressable style={pet.standardButton}>
-                            <Text style={pet.standardButtonText}>ADOÇÃO</Text>
-                        </Pressable>
-                        <Pressable style={[pet.standardButton, pet.inactiveButton]}>
-                            <Text style={[pet.standardButtonText, pet.inactiveButtonText]}>APADRINHAR</Text>
-                        </Pressable>
-                        <Pressable style={[pet.standardButton, pet.inactiveButton]}>
-                            <Text style={pet.standardButtonText}>AJUDA</Text>
-                        </Pressable>
-                    </View>
+                    {/*<Text style={pet.headerSelectionText}>Tenho interesse em cadastrar animal para:</Text>*/}
+                    {/*<View style={pet.rowContainer}>*/}
+                    {/*    <Pressable style={pet.standardButton}>*/}
+                    {/*        <Text style={pet.standardButtonText}>ADOÇÃO</Text>*/}
+                    {/*    </Pressable>*/}
+                    {/*    <Pressable style={[pet.standardButton, pet.inactiveButton]}>*/}
+                    {/*        <Text style={[pet.standardButtonText, pet.inactiveButtonText]}>APADRINHAR</Text>*/}
+                    {/*    </Pressable>*/}
+                    {/*    <Pressable style={[pet.standardButton, pet.inactiveButton]}>*/}
+                    {/*        <Text style={pet.standardButtonText}>AJUDA</Text>*/}
+                    {/*    </Pressable>*/}
+                    {/*</View>*/}
                     <View>
                         <Text style={pet.headerText}>Adoção</Text>
 
@@ -104,9 +122,18 @@ export default function Create({navigation}) {
                         </View>
 
                         <Text style={pet.label}>FOTOS DO ANIMAL</Text>
-                        <Pressable style={[pet.containerCenter, pet.imagePicker]} onPress={pickImage}>
-                            <Text>adicionar fotos</Text>
-                        </Pressable>
+                        <View style={signup.imgPerfil}>
+                            <Controller
+                                control={control}
+                                render={({ field: { onChange, value } }) => (
+                                    <TouchableOpacity onPress={pickImage}>
+                                        {imgShow}
+                                    </TouchableOpacity>
+                                )}
+                                name="foto"
+                                defaultValue=""
+                            />
+                        </View>
 
                         <Text style={pet.label}>ESPÉCIE</Text>
                         <Controller
