@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
-import {auth, fs} from "../../config/firebaseConfig";
+import {auth, fs, st} from "../../config/firebaseConfig";
 import {doc, getDoc} from "firebase/firestore";
+import {getDownloadURL, ref} from "@firebase/storage";
 
 function useAuth() {
     const [user, setUser] = useState(null);
@@ -46,6 +47,23 @@ function User() {
     return {userData};
 }
 
+function avatar() {
+    const [userAvatar, setUserAvatar] = useState(null);
+    useEffect(() => {
+        const downloadImage = async (imageName: string) => {
+            const storageRef = getDownloadURL(ref(st, imageName))
+                .then((url) => {
+                    setUserAvatar(url);
+                }).catch((error) => {
+                    console.log(error);
+                });
+        }
+        downloadImage('avatars/'+auth.currentUser.uid+'.jpeg').then(r => {});
+    }, []);
+
+    return {userAvatar};
+}
+
 function signOut(navigation) {
     return async () => {
         try {
@@ -65,4 +83,4 @@ function signOut(navigation) {
     };
 }
 
-export {useAuth, User, signOut}
+export {useAuth, User, signOut, avatar}

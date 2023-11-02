@@ -1,18 +1,17 @@
 import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import Button from "../../components/buttons/buttonsPadroes";
-import {User} from "../hooks/useAuth";
+import {avatar, User} from "../hooks/useAuth";
 
 export default function Profile() {
-
-    const splash = require('../../assets/icon.png');
     const {userData} = User()
+    const {userAvatar} = avatar();
 
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <View style={styles.container}>
-                <Image source={splash} style={styles.img}></Image>
+                <Image source={{uri: userAvatar}} style={styles.img}></Image>
                 <Text style={{fontWeight: 'bold'}}>{userData ? userData.nome : ''}</Text>
                 <View style={styles.contentView}>
                     <Text style={styles.text}>NOME COMPLETO</Text>
