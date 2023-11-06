@@ -4,15 +4,16 @@ import {StatusBar} from "expo-status-bar";
 import {useState} from "react";
 import {setDoc, doc} from "firebase/firestore";
 import {createUserWithEmailAndPassword} from "@firebase/auth";
+import {ref, uploadBytes} from "@firebase/storage";
 import {Controller, useForm} from "react-hook-form";
-import {auth, fs} from "../../config/firebaseConfig";
+import {auth, fs, st} from "../../config/firebaseConfig";
 import {signup} from "../../styles/global";
 import Button from "../../components/buttons/buttonsPadroes";
 
 export default function Signup({ navigation }) {
     const [image, setImage] = useState(null);
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm({
         defaultValues: {
             nome: '',
             passwdConfirm :'',
@@ -22,11 +23,14 @@ export default function Signup({ navigation }) {
             cidade :'',
             uf :'',
             email :'',
-            idade :''
+            idade :'',
+            avatar :''
         }
     });
-    const onSubmit = data => {
-        console.log(data)
+    const onSubmit = async (data) => {
+        console.log(data);
+        const blob = await fetch(data.avatar).then(r => r.blob());
+
         createUserWithEmailAndPassword(auth, data.email, data.password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
@@ -38,6 +42,10 @@ export default function Signup({ navigation }) {
                     uf : data.uf,
                     idade : data.idade,
                     telefone : data.telefone
+                });
+                const storageRef = ref(st, 'avatars/'+user.uid+'.jpeg');
+                uploadBytes(storageRef, blob).then((snapshot) => {
+                    console.log('Uploaded a blob or file!');
                 });
                 navigation.navigate('Login')
 
@@ -61,6 +69,7 @@ export default function Signup({ navigation }) {
         });
 
         if (!result.canceled) {
+            setValue("avatar", result.assets[0].uri);
             setImage(result.assets[0].uri);
         }
     };
@@ -271,9 +280,16 @@ export default function Signup({ navigation }) {
                     </Text>
                 </View>
                 <View style={signup.imgPerfil}>
-                    <TouchableOpacity onPress={pickImage}>
-                        {imgShow}
-                    </TouchableOpacity>
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <TouchableOpacity onPress={pickImage}>
+                                {imgShow}
+                            </TouchableOpacity>
+                        )}
+                        name="avatar"
+                        defaultValue=""
+                    />
                 </View>
                 <View style={signup.buttonEntrar}>
                     <Pressable onPress={handleSubmit(onSubmit)}>
