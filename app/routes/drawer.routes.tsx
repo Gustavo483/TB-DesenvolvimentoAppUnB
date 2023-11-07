@@ -5,6 +5,7 @@ import Home from "../hub/home";
 import Create from "../pet/create";
 import Profile from "../user/profile";
 import ViewAllPets from "../pet/viewAllPets";
+import ViewMyPets from "../pet/viewMyPets";
 import CustomDrawer from "../../components/drawer/customDrawer";
 import Details from "../pet/details";
 import {StyleSheet} from "react-native";
@@ -24,14 +25,14 @@ export default function DrawerRoutes() {
                 }}
             />
             <Drawer.Screen
-                name={"Profile"}
+                name={'Profile'}
                 component={Profile}
                 options={{
                     drawerLabel: 'Meu Perfil'
                 }}
             />
             <Drawer.Screen
-                name={"Create"}
+                name={'Create'}
                 component={Create}
                 options={{
                     drawerLabel: 'Cadastro de Animais'
@@ -42,6 +43,13 @@ export default function DrawerRoutes() {
                 component={ViewAllPets}
                 options={{
                     drawerLabel: 'Pets'
+                }}
+            />
+            <Drawer.Screen
+                name={'Meus Pets'}
+                component={ViewMyPets}
+                options={{
+                    drawerLabel: 'Meus Pets'
                 }}
             />
             <Drawer.Screen
