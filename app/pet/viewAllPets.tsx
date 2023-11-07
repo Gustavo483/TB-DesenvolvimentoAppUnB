@@ -1,16 +1,12 @@
 import {Image, ScrollView, StyleSheet, Text, View, FlatList, TouchableOpacity} from "react-native";
-import {StatusBar} from "expo-status-bar";
-import Button from "../../components/buttons/buttonsPadroes";
-import {avatar, User} from "../hooks/useAuth";
 import React, { useEffect, useState } from 'react';
-import {collection, query, where, getDocs, doc, getDoc} from "firebase/firestore";
-import {auth, fs, st} from "../../config/firebaseConfig";
-import {navigation} from "../../styles/global";
-import {getDownloadURL, ref} from "@firebase/storage";
+import {collection, query, getDocs,} from "firebase/firestore";
+import {fs} from "../../config/firebaseConfig";
+import {getStorage,getDownloadURL, ref } from "@firebase/storage";
+
 export default function ViewAllPets({navigation}) {
     const [data, setData] = useState([]);
-    const {userData} = User()
-
+    const [imageUrls, setImageUrls] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,6 +26,28 @@ export default function ViewAllPets({navigation}) {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            const storage = getStorage();
+
+            const imageUrls = {};
+
+            for (const item of data) {
+                try {
+                    const imageRef = ref(storage, 'pets/' + item.id + '.jpeg');
+                    const url = await getDownloadURL(imageRef);
+                    imageUrls[item.id] = url;
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            setImageUrls(imageUrls);
+        };
+
+        fetchImageUrls();
+    }, [data]);
+
     return (
         <ScrollView>
             <View>
@@ -41,7 +59,7 @@ export default function ViewAllPets({navigation}) {
                             onPress={() => navigation.navigate('details', { item })}
                         >
                             <View style={styles.card}>
-
+                                <Image source={{ uri: imageUrls[item.id] }} style={styles.image} />
                                 <Text style={styles.name}>{item.nome}</Text>
                             </View>
                         </TouchableOpacity>
@@ -68,7 +86,6 @@ const styles = StyleSheet.create({
         marginRight: 15,
         marginTop : 10,
         marginBottom : 10
-
     },
     image: {
         width: '100%',

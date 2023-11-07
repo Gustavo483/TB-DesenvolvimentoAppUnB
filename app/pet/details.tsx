@@ -3,10 +3,32 @@ import {StatusBar} from "expo-status-bar";
 import { Text, View } from 'react-native';
 import Button from "../../components/buttons/buttonsPadroes";
 import {avatar, User} from "../hooks/useAuth";
+import React, {useEffect, useState} from "react";
+import {getDownloadURL, getStorage, ref} from "@firebase/storage";
 export default function Details({route}) {
     const {userAvatar} = avatar();
     const {userData} = User()
     const { item } = route.params;
+    const [imageUrls, setImageUrls] = useState({});
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            const storage = getStorage();
+
+            const imageUrls = {};
+            try {
+                const imageRef = ref(storage, 'pets/' + item.id + '.jpeg');
+                const url = await getDownloadURL(imageRef);
+                imageUrls[item.id] = url;
+            } catch (error) {
+                console.log(error);
+            }
+
+
+            setImageUrls(imageUrls);
+        };
+
+        fetchImageUrls();
+    }, [item]);
 
     console.log(item)
     const temperamentos = Object.keys(item.temperamento).filter((chave) => item.temperamento[chave]).map((chave) => {
@@ -17,7 +39,8 @@ export default function Details({route}) {
         );
     });
 
-    const exigencias = Object.keys(item.exigencias).filter((chave) => item.temperamento[chave]).map((chave) => {
+    const exigencias = Object.keys(item.exigencias).map((chave) => {
+        console.log(item.exigencias[chave])
         return (
             <Text key={chave} >
                 {item.exigencias[chave] ? `${chave}` : ''}
@@ -28,6 +51,8 @@ export default function Details({route}) {
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
             <View style={styles.container}>
+
+                <Image source={{ uri: imageUrls[item.id] }} style={styles.image} />
 
                 <Text style={{fontWeight: 'bold'}}>{item ? item.nome : ''}</Text>
 
@@ -123,6 +148,16 @@ const styles = StyleSheet.create({
         width: 112,
         height: 112,
         borderRadius: 100,
+    },
+    image: {
+        width: '95%',
+        height: 200,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        marginTop: 10,
+        marginBottom: 10
     },
     text: {
         color: '#589B9B'
