@@ -2,11 +2,10 @@ import {Image, ScrollView, StyleSheet} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import { Text, View } from 'react-native';
 import Button from "../../components/buttons/buttonsPadroes";
-import {avatar, User} from "../hooks/useAuth";
+import {User} from "../hooks/useAuth";
 import React, {useEffect, useState} from "react";
 import {getDownloadURL, getStorage, ref} from "@firebase/storage";
 export default function Details({route}) {
-    const {userAvatar} = avatar();
     const {userData} = User()
     const { item } = route.params;
     const [imageUrls, setImageUrls] = useState({});
@@ -22,15 +21,11 @@ export default function Details({route}) {
             } catch (error) {
                 console.log(error);
             }
-
-
             setImageUrls(imageUrls);
         };
-
         fetchImageUrls();
     }, [item]);
 
-    console.log(item)
     const temperamentos = Object.keys(item.temperamento).filter((chave) => item.temperamento[chave]).map((chave) => {
         return (
             <Text key={chave} >
@@ -40,7 +35,6 @@ export default function Details({route}) {
     });
 
     const exigencias = Object.keys(item.exigencias).map((chave) => {
-        console.log(item.exigencias[chave])
         return (
             <Text key={chave} >
                 {item.exigencias[chave] ? `${chave}` : ''}

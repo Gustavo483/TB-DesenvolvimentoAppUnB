@@ -17,7 +17,6 @@ export default function ViewAllPets({navigation}) {
             const documents = [];
             querySnapshot.forEach((doc) => {
                 documents.push({ id: doc.id, ...doc.data() });
-                console.log(doc.data())
             });
 
             setData(documents);
