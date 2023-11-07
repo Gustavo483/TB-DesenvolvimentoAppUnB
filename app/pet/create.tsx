@@ -31,7 +31,6 @@ export default function Create({navigation}) {
         }});
 
     const onSubmit = async data => {
-        console.log(data)
         const docRef = await addDoc(collection(fs, "pets"), {
             nome: data.nome,
             especie: data.especie,
@@ -48,10 +47,9 @@ export default function Create({navigation}) {
         });
 
         const blob = await fetch(data.foto).then(r => r.blob());
-        console.log('pets/'+docRef.id+'.jpeg')
         const storageRef = ref(st, 'pets/'+docRef.id+'.jpeg');
         uploadBytes(storageRef, blob).then((snapshot) => {
-            console.log('Uploaded a blob or file!'+ docRef.id);
+            console.log('Uploaded a blob or file!');
         });
         navigation.navigate('Home')
     }
@@ -67,14 +65,11 @@ export default function Create({navigation}) {
 
         if (!result.canceled) {
             setValue("foto", result.assets[0].uri);
-            console.log(result.assets[0].uri)
             setImage(result.assets[0].uri);
         }
     };
 
     if (image) {
-        console.log(image)
-
         imgShow = <Image source={{uri: image}} style={signup.img}/>
     } else {
         imgShow =
