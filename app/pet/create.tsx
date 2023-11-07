@@ -31,7 +31,6 @@ export default function Create({navigation}) {
         }});
 
     const onSubmit = async data => {
-        console.log(data)
         const docRef = await addDoc(collection(fs, "pets"), {
             nome: data.nome,
             especie: data.especie,
