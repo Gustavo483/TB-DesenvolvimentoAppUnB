@@ -2,6 +2,8 @@ import {View, Text, StyleSheet, Pressable} from "react-native";
 import React from "react";
 import {StatusBar} from "expo-status-bar";
 import {auth} from "../../config/firebaseConfig";
+import Constants from "expo-constants";
+import * as Notifications from 'expo-notifications';
 
 export default function Home({navigation}) {
     const signOut = async () => {
@@ -14,6 +16,32 @@ export default function Home({navigation}) {
                     console.log(errorMessage);
                 });
 
+    }
+
+
+// Can use this function below or use Expo's Push Notification Tool from: https://expo.dev/notifications
+    async function sendPushNotification() {
+        let token = await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId,
+        })
+        console.log(token);
+        const message = {
+            to: token.data,
+            sound: 'default',
+            title: 'Original Title',
+            body: 'And here is the body!',
+            data: { someData: 'goes here' },
+        };
+
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        });
     }
 
     return (
@@ -38,6 +66,9 @@ export default function Home({navigation}) {
                 <Text style={styles.standardButtonText}> SIGN OUT</Text>
             </Pressable>) : (<Text style={styles.standardButtonText}></Text>)}
 
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await sendPushNotification();}}>
+                <Text style={styles.standardButtonText}>TESTE NOTIFICAÇÃO</Text>
+            </Pressable>
 
         </View>
     );
