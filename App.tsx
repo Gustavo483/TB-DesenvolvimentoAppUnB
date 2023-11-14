@@ -9,6 +9,8 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import {doc, setDoc} from "firebase/firestore";
+import {auth, fs} from "./config/firebaseConfig";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -51,6 +53,20 @@ async function registerForPushNotificationsAsync() {
 
     return token.data;
 }
+
+async function updatePushToken(){
+    if(auth.currentUser.uid) {
+        const token = await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId,
+        });
+
+        await setDoc(doc(fs, "users", auth.currentUser.uid), {
+            pushToken: token
+        });
+        console.log("Push Token Updated")
+    }
+}
+
 export default function App() {
     const [isReady, setIsReady] = useState(false);
     const [expoPushToken, setExpoPushToken] = useState('');
@@ -60,6 +76,7 @@ export default function App() {
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+        updatePushToken().then(r => {});
 
         // @ts-ignore
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
