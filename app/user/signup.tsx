@@ -9,6 +9,8 @@ import {Controller, useForm} from "react-hook-form";
 import {auth, fs, st} from "../../config/firebaseConfig";
 import {signup} from "../../styles/global";
 import Button from "../../components/buttons/buttonsPadroes";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 
 export default function Signup({ navigation }) {
     const [image, setImage] = useState(null);
@@ -16,15 +18,16 @@ export default function Signup({ navigation }) {
     const { control, handleSubmit, setValue, formState: { errors } } = useForm({
         defaultValues: {
             nome: '',
-            passwdConfirm :'',
-            password :'',
-            telefone :'',
-            endereco :'',
-            cidade :'',
-            uf :'',
-            email :'',
-            idade :'',
-            avatar :''
+            passwdConfirm: '',
+            password: '',
+            telefone: '',
+            endereco: '',
+            cidade: '',
+            uf: '',
+            email: '',
+            idade: '',
+            avatar: '',
+            pushToken: ''
         }
     });
     const onSubmit = async (data) => {
@@ -34,14 +37,18 @@ export default function Signup({ navigation }) {
         createUserWithEmailAndPassword(auth, data.email, data.password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
+                const token = await Notifications.getExpoPushTokenAsync({
+                    projectId: Constants.expoConfig.extra.eas.projectId,
+                });
                 await setDoc(doc(fs, "users", user.uid), {
                     email: data.email,
-                    nome : data.nome,
-                    endereco : data.endereco,
-                    cidade : data.cidade,
-                    uf : data.uf,
-                    idade : data.idade,
-                    telefone : data.telefone
+                    nome: data.nome,
+                    endereco: data.endereco,
+                    cidade: data.cidade,
+                    uf: data.uf,
+                    idade: data.idade,
+                    telefone: data.telefone,
+                    pushToken: token
                 });
                 const storageRef = ref(st, 'avatars/'+user.uid+'.jpeg');
                 uploadBytes(storageRef, blob).then((snapshot) => {
