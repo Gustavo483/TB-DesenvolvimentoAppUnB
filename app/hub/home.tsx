@@ -20,11 +20,13 @@ export default function Home({navigation}) {
 
 
 // Can use this function below or use Expo's Push Notification Tool from: https://expo.dev/notifications
-    async function sendPushNotification() {
+    async function sendPushNotification(target: string) {
         let token = await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId,
         })
         console.log(token);
+        if(target == "gustavo")
+            token.data = "ExponentPushToken[d-tdNWEw4OI2xVy8o3m_Zq]";
         const message = {
             to: token.data,
             sound: 'default',
@@ -66,8 +68,12 @@ export default function Home({navigation}) {
                 <Text style={styles.standardButtonText}> SIGN OUT</Text>
             </Pressable>) : (<Text style={styles.standardButtonText}></Text>)}
 
-            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await sendPushNotification();}}>
-                <Text style={styles.standardButtonText}>TESTE NOTIFICAÇÃO</Text>
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await sendPushNotification("self");}}>
+                <Text style={styles.standardButtonText}>TESTE NOTIFICAÇÃO (SELF)</Text>
+            </Pressable>
+
+            <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await sendPushNotification("gustavo");}}>
+                <Text style={styles.standardButtonText}>TESTE NOTIFICAÇÃO (GUSTAVO)</Text>
             </Pressable>
 
         </View>
