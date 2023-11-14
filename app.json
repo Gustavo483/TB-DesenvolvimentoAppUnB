@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f7a800"
       },
-      "package": "com.singlehorizon.meau"
+      "package": "com.singlehorizon.meau",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro"
