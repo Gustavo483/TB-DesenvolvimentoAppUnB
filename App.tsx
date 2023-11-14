@@ -55,7 +55,7 @@ async function registerForPushNotificationsAsync() {
 }
 
 async function updatePushToken(){
-    if(auth.currentUser.uid) {
+    if(auth.currentUser) {
         const token = await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId,
         });
