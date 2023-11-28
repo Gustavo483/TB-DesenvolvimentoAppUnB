@@ -1,12 +1,19 @@
-import {Image, ScrollView, StyleSheet} from "react-native";
+import {Image, Pressable, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import { Text, View } from 'react-native';
 import Button from "../../components/buttons/buttonsPadroes";
-import {User} from "../hooks/useAuth";
+import {User,avatar} from "../hooks/useAuth";
 import React, {useEffect, useState} from "react";
 import {getDownloadURL, getStorage, ref} from "@firebase/storage";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+import {auth, fs} from "../../config/firebaseConfig";
+import {addDoc, collection, doc, getDoc} from "firebase/firestore";
+
+
 export default function Details({route}) {
     const {userData} = User()
+    const [userDono, setUserDono] = useState(null);
     const { item } = route.params;
     const [imageUrls, setImageUrls] = useState({});
     useEffect(() => {
@@ -41,6 +48,63 @@ export default function Details({route}) {
             </Text>
         );
     });
+
+    async function registrarEnteresseAdocao() {
+
+        // Recuperando as informações do dono do animal
+        if (item.idDono) {
+            console.log(item.idDono)
+            const docRef = doc(fs, "users", item.idDono);
+
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                setUserDono(docSnap.data());
+            } else {
+                console.log("Usuario não encontrado!");
+            }
+        }
+
+        // enviando notificação
+        if (userDono.pushToken){
+            console.log('entrei aqui')
+            let token = await Notifications.getExpoPushTokenAsync({
+                projectId: Constants.expoConfig.extra.eas.projectId,
+            })
+
+            token.data = userDono.pushToken.data;
+            let teste = userData.nome ? userData.nome :'Alguem'
+            const message = {
+                to: token.data,
+                sound: 'default',
+                title: 'Adoção',
+                body: teste+' tem interesse em adotar o '+item.nome,
+                data: { someData: 'goes here' },
+            };
+
+            await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Accept-encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(message),
+            });
+
+            //registrando no firebase a notificação
+            const docRef = await addDoc(collection(fs, "notification"), {
+                IDPets: item.id,
+                IDUserDesejaAdotar: auth.currentUser.uid,
+                IDUserDono: item.idDono,
+                message : message
+            });
+            console.log('Envio de noticação realizado com sucesso.')
+        }else{
+            console.log('Dono do animal não tem pushToken')
+        }
+    }
+
     return (
         <ScrollView>
             <StatusBar style="auto" backgroundColor="#88c9bf"/>
@@ -117,9 +181,9 @@ export default function Details({route}) {
                     <Text style={styles.subText}>{item ? item.descricao : ''}</Text>
                 </View>
 
-                <View style={styles.buttonEntrar}>
-                    <Button color="green" texto="EDITAR PERFIL"/>
-                </View>
+                <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await registrarEnteresseAdocao();}}>
+                    <Text style={styles.standardButtonText}>Enteresse em adotar</Text>
+                </Pressable>
             </View>
         </ScrollView>
     )
@@ -142,6 +206,29 @@ const styles = StyleSheet.create({
         width: 112,
         height: 112,
         borderRadius: 100,
+    },
+    standardButton: {
+        boxShadow: '0px 1px 4px #000000bf',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 2,
+        elevation: 3,
+        backgroundColor: '#ffd358',
+        width: 100,
+        height: 40
+    },
+    submitButton: {
+        width: 232,
+        height: 40,
+        margin: 24,
+        marginBottom: 10
+    },
+    standardButtonText: {
+        letterSpacing: 0,
+        fontSize: 12,
+        fontWeight: '400',
+        color: '#434343',
+        // fontFamily: 'Roboto_400Regular'
     },
     image: {
         width: '95%',
