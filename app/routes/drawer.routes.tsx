@@ -1,27 +1,25 @@
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import {Feather} from "@expo/vector-icons";
 
-import Home from "../hub/home";
 import Create from "../pet/create";
 import Profile from "../user/profile";
 import ViewPets from "../pet/viewPets";
 import CustomDrawer from "../../components/drawer/customDrawer";
 import Details from "../pet/details";
 import Notification from "../notification/showNotification";
-import {StyleSheet} from "react-native";
 
 const Drawer = createDrawerNavigator();
 
-const initialRoute = 'Home'
+const initialRoute = 'Pets'
 export default function DrawerRoutes() {
     return (
         <Drawer.Navigator initialRouteName={initialRoute} drawerContent={props => <CustomDrawer {...props}/>}>
             <Drawer.Screen
-                name={'Home'}
-                component={Home}
+                name={'Pets'}
+                component={ViewPets}
                 options={{
                     drawerIcon: ({color, size}) => <Feather name={"home"} color={color} size={size}/>,
-                    drawerLabel: 'Home'
+                    drawerLabel: 'Pets'
                 }}
             />
             <Drawer.Screen
@@ -43,13 +41,6 @@ export default function DrawerRoutes() {
                 component={Notification}
                 options={{
                     drawerLabel: 'Notifies'
-                }}
-            />
-            <Drawer.Screen
-                name={'Pets'}
-                component={ViewPets}
-                options={{
-                    drawerLabel: 'Pets'
                 }}
             />
             <Drawer.Screen
