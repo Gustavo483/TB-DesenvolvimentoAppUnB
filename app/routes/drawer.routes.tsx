@@ -7,6 +7,7 @@ import Profile from "../user/profile";
 import ViewAllPets from "../pet/viewAllPets";
 import CustomDrawer from "../../components/drawer/customDrawer";
 import Details from "../pet/details";
+import Notification from "../notification/showNotification";
 import {StyleSheet} from "react-native";
 
 const Drawer = createDrawerNavigator();
@@ -35,6 +36,13 @@ export default function DrawerRoutes() {
                 component={Create}
                 options={{
                     drawerLabel: 'Cadastro de Animais'
+                }}
+            />
+            <Drawer.Screen
+                name={"Notifies"}
+                component={Notification}
+                options={{
+                    drawerLabel: 'Notifies'
                 }}
             />
             <Drawer.Screen
