@@ -48,24 +48,22 @@ export default function ViewAllPets({navigation}) {
     }, [data]);
 
     return (
-        <ScrollView>
-            <View>
-                <FlatList
-                    data={data}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('details', { item })}
-                        >
-                            <View style={styles.card}>
-                                <Image source={{ uri: imageUrls[item.id] }} style={styles.image} />
-                                <Text style={styles.name}>{item.nome}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
-            </View>
-        </ScrollView>
+        <View>
+            <FlatList
+                data={data}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('details', { item })}
+                    >
+                        <View style={styles.card}>
+                            <Image source={{ uri: imageUrls[item.id] }} style={styles.image} />
+                            <Text style={styles.name}>{item.nome}</Text>
+                        </View>
+                    </TouchableOpacity>
+                )}
+            />
+        </View>
     )
 }
 

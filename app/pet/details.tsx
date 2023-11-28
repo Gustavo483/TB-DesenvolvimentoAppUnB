@@ -1,8 +1,7 @@
-import {Image, Pressable, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
+import {Image, Pressable, ScrollView, StyleSheet} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import { Text, View } from 'react-native';
-import Button from "../../components/buttons/buttonsPadroes";
-import {User,avatar} from "../hooks/useAuth";
+import {User} from "../hooks/useAuth";
 import React, {useEffect, useState} from "react";
 import {getDownloadURL, getStorage, ref} from "@firebase/storage";
 import * as Notifications from "expo-notifications";
@@ -49,7 +48,7 @@ export default function Details({route}) {
         );
     });
 
-    async function registrarEnteresseAdocao() {
+    async function registrarInteresseAdocao() {
 
         // Recuperando as informações do dono do animal
         if (item.idDono) {
@@ -67,7 +66,6 @@ export default function Details({route}) {
 
         // enviando notificação
         if (userDono.pushToken){
-            console.log('entrei aqui')
             let token = await Notifications.getExpoPushTokenAsync({
                 projectId: Constants.expoConfig.extra.eas.projectId,
             })
@@ -181,7 +179,7 @@ export default function Details({route}) {
                     <Text style={styles.subText}>{item ? item.descricao : ''}</Text>
                 </View>
 
-                <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await registrarEnteresseAdocao();}}>
+                <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await registrarInteresseAdocao();}}>
                     <Text style={styles.standardButtonText}>Enteresse em adotar</Text>
                 </Pressable>
             </View>

@@ -1,6 +1,6 @@
-import {Image, ScrollView, StyleSheet, Text, View, FlatList, TouchableOpacity} from "react-native";
+import {Image, StyleSheet, Text, View, FlatList, Pressable} from "react-native";
 import React, { useEffect, useState } from 'react';
-import {collection, query, getDocs, where,} from "firebase/firestore";
+import {collection, query, getDocs, where} from "firebase/firestore";
 import {fs,auth} from "../../config/firebaseConfig";
 import {getStorage,getDownloadURL, ref } from "@firebase/storage";
 
@@ -21,11 +21,14 @@ export default function ShowNotification({navigation}) {
             });
 
             setData(documents);
-            console.log('entrei aqui')
         };
 
         fetchData();
     }, []);
+
+    async function iniciarChat() {
+        console.log('Fazer logica para iniciar chat.')
+    }
 
     useEffect(() => {
         const fetchImageUrls = async () => {
@@ -35,7 +38,6 @@ export default function ShowNotification({navigation}) {
 
             for (const item of data) {
                 try {
-
                     const imageRef = ref(storage, 'avatars/'+ item.IDUserDesejaAdotar + '.jpeg');
                     const url = await getDownloadURL(imageRef);
                     imageUrls[item.id] = url;
@@ -43,63 +45,82 @@ export default function ShowNotification({navigation}) {
                     console.log(error);
                 }
             }
-
             setImageUrls(imageUrls);
         };
 
         fetchImageUrls();
     }, [data]);
 
+    const renderItem = ({ item }) => (
+        <View style={styles.animalContainer}>
+            <Image source={{ uri: imageUrls[item.id] }} style={styles.animalImage} />
+            <View style={styles.animalDetails}>
+                <Text style={styles.animalName}>{item.message.body}</Text>
+                <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await iniciarChat();}}>
+                    <Text style={styles.standardButtonText}>Iniciar chat</Text>
+                </Pressable>
+            </View>
+        </View>
+    );
 
     return (
-
-        <View>
-            <FlatList
-                data={data}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('details', { item })}
-                    >
-                        <View style={styles.card}>
-                            <Image source={{ uri: imageUrls[item.id] }} style={styles.image} />
-                            <Text style={styles.name}>{item.nome}</Text>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            />
-        </View>
-
-    )
+        <FlatList
+            data={data}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            style={styles.container}
+        />
+    );
 }
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        marginStart: 15,
-        marginRight: 15,
-        marginTop : 10,
-        marginBottom : 10
+    container: {
+        padding: 16,
     },
-    image: {
+    standardButton: {
+        boxShadow: '0px 1px 4px #000000bf',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 2,
+        elevation: 3,
+        backgroundColor: '#ffd358',
+        width: 100,
+        height: 40
+    },
+    submitButton: {
         width: '100%',
-        height: 150,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        height: 40,
+        marginBottom: 10
     },
-    name: {
+    standardButtonText: {
+        letterSpacing: 0,
+        fontSize: 12,
+        fontWeight: '400',
+        color: '#434343',
+        // fontFamily: 'Roboto_400Regular'
+    },
+    animalContainer: {
+        flexDirection: 'row',
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    animalImage: {
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
+    },
+    animalDetails: {
+        flex: 1,
+        padding: 10,
+    },
+    animalName: {
         fontSize: 18,
         fontWeight: 'bold',
-        padding: 10,
-        textAlign: 'center',
+    },
+    animalDescription: {
+        fontSize: 14,
     },
 });
