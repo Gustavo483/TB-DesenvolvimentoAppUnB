@@ -180,7 +180,7 @@ export default function Details({route}) {
                 </View>
 
                 <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await registrarInteresseAdocao();}}>
-                    <Text style={styles.standardButtonText}>Enteresse em adotar</Text>
+                    <Text style={styles.standardButtonText}>Interesse em adotar</Text>
                 </Pressable>
             </View>
         </ScrollView>
