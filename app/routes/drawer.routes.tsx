@@ -4,7 +4,7 @@ import {Feather} from "@expo/vector-icons";
 import Home from "../hub/home";
 import Create from "../pet/create";
 import Profile from "../user/profile";
-import ViewAllPets from "../pet/viewAllPets";
+import ViewPets from "../pet/viewPets";
 import CustomDrawer from "../../components/drawer/customDrawer";
 import Details from "../pet/details";
 import Notification from "../notification/showNotification";
@@ -25,14 +25,14 @@ export default function DrawerRoutes() {
                 }}
             />
             <Drawer.Screen
-                name={"Profile"}
+                name={'Profile'}
                 component={Profile}
                 options={{
                     drawerLabel: 'Meu Perfil'
                 }}
             />
             <Drawer.Screen
-                name={"Create"}
+                name={'Create'}
                 component={Create}
                 options={{
                     drawerLabel: 'Cadastro de Animais'
@@ -47,9 +47,16 @@ export default function DrawerRoutes() {
             />
             <Drawer.Screen
                 name={'Pets'}
-                component={ViewAllPets}
+                component={ViewPets}
                 options={{
                     drawerLabel: 'Pets'
+                }}
+            />
+            <Drawer.Screen
+                name={'Meus Pets'}
+                component={ViewPets}
+                options={{
+                    drawerLabel: 'Meus Pets'
                 }}
             />
             <Drawer.Screen
