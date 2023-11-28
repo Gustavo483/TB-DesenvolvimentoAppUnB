@@ -69,7 +69,7 @@ export default function Home({navigation}) {
             </Pressable>) : (<Text style={styles.standardButtonText}></Text>)}
 
             <Pressable style={[styles.standardButton, styles.submitButton]} onPress={() => navigation.navigate('Notifies')}>
-                <Text style={styles.standardButtonText}>NOTIFICAÇÃO RECEBIDAS</Text>
+                <Text style={styles.standardButtonText}>NOTIFICAÇÕES RECEBIDAS</Text>
             </Pressable>
 
             <Pressable style={[styles.standardButton, styles.submitButton]} onPress={async () => {await sendPushNotification("self");}}>
