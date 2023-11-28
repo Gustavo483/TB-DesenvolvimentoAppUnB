@@ -10,14 +10,14 @@ export default function DrawerNotAuthRoutes() {
     return (
         <Drawer.Navigator initialRouteName={initialRoute} drawerContent={props => <CustomDrawer {...props}/>}>
             <Drawer.Screen
-                name={"Login"}
+                name={'Login'}
                 component={Login}
                 options={{
                     drawerLabel: 'Login'
                 }}
             />
             <Drawer.Screen
-                name={"Signup"}
+                name={'Signup'}
                 component={Signup}
                 options={{
                     drawerLabel: 'Registrar Usuário'

@@ -1,12 +1,14 @@
-import {Image, ScrollView, StyleSheet, Text, View, FlatList, TouchableOpacity} from "react-native";
-import React, { useEffect, useState } from 'react';
-import {collection, query, getDocs,} from "firebase/firestore";
-import {fs} from "../../config/firebaseConfig";
-import {getStorage,getDownloadURL, ref } from "@firebase/storage";
+import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, {useEffect, useState} from 'react';
+import {collection, getDocs, query,} from "firebase/firestore";
+import {auth, fs} from "../../config/firebaseConfig";
+import {getDownloadURL, getStorage, ref} from "@firebase/storage";
+import {useRoute} from "@react-navigation/core";
 
-export default function ViewAllPets({navigation}) {
+export default function ViewPets({navigation}) {
     const [data, setData] = useState([]);
     const [imageUrls, setImageUrls] = useState({});
+    const route = useRoute();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,7 +18,13 @@ export default function ViewAllPets({navigation}) {
 
             const documents = [];
             querySnapshot.forEach((doc) => {
-                documents.push({ id: doc.id, ...doc.data() });
+                if (route.name === 'Pets') {
+                    documents.push({id: doc.id, ...doc.data()});
+                } else {
+                    if (doc.data().idDono == auth.currentUser.uid) {
+                        documents.push({id: doc.id, ...doc.data()});
+                    }
+                }
             });
 
             setData(documents);
@@ -53,12 +61,12 @@ export default function ViewAllPets({navigation}) {
                 <FlatList
                     data={data}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
+                    renderItem={({item}) => (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('details', { item })}
+                            onPress={() => navigation.navigate('details', {item})}
                         >
                             <View style={styles.card}>
-                                <Image source={{ uri: imageUrls[item.id] }} style={styles.image} />
+                                <Image source={{uri: imageUrls[item.id]}} style={styles.image}/>
                                 <Text style={styles.name}>{item.nome}</Text>
                             </View>
                         </TouchableOpacity>
@@ -83,8 +91,8 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginStart: 15,
         marginRight: 15,
-        marginTop : 10,
-        marginBottom : 10
+        marginTop: 10,
+        marginBottom: 10
     },
     image: {
         width: '100%',
