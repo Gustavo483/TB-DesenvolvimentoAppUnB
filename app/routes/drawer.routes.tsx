@@ -7,6 +7,7 @@ import ViewPets from "../pet/viewPets";
 import CustomDrawer from "../../components/drawer/customDrawer";
 import Details from "../pet/details";
 import Notification from "../notification/showNotification";
+import IndexChat from "../chat/indexChat";
 
 const Drawer = createDrawerNavigator();
 
@@ -55,6 +56,13 @@ export default function DrawerRoutes() {
                 component={Details}
                 options={{
                     drawerLabel: 'Detalhamento pet'
+                }}
+            />
+            <Drawer.Screen
+                name={'Chat'}
+                component={IndexChat}
+                options={{
+                    drawerLabel: 'Chat'
                 }}
             />
         </Drawer.Navigator>
