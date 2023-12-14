@@ -1,28 +1,31 @@
 import {createDrawerNavigator} from "@react-navigation/drawer";
-import Login from "../autentication/login";
-import Signup from "../user/signup";
-import CustomDrawer from "../../components/drawer/customDrawer";
+import {ScreensArrayNot} from "../../components/constants/constants";
+import Colors from "../../components/constants/Colors";
 
 const Drawer = createDrawerNavigator();
 
-const initialRoute = 'Login'
+const initialRoute = 'Login';
+
 export default function DrawerNotAuthRoutes() {
     return (
-        <Drawer.Navigator initialRouteName={initialRoute} drawerContent={props => <CustomDrawer {...props}/>}>
-            <Drawer.Screen
-                name={'Login'}
-                component={Login}
-                options={{
-                    drawerLabel: 'Login'
-                }}
-            />
-            <Drawer.Screen
-                name={'Signup'}
-                component={Signup}
-                options={{
-                    drawerLabel: 'Registrar Usuário'
-                }}
-            />
+        <Drawer.Navigator
+            screenOptions={{
+                drawerType: 'slide',
+                overlayColor: 'transparent',
+                drawerActiveBackgroundColor: Colors.primary,
+            }}
+            initialRouteName={initialRoute}
+        >
+            {ScreensArrayNot.map((item, index) => (
+                <Drawer.Screen
+                    key={index}
+                    name={item.route}
+                    component={item.component}
+                    options={{
+                        drawerLabel: item.label
+                    }}
+                />
+            ))}
         </Drawer.Navigator>
     )
 }

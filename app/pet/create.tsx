@@ -51,7 +51,7 @@ export default function Create({navigation}) {
         uploadBytes(storageRef, blob).then((snapshot) => {
             console.log('Uploaded a blob or file!');
         });
-        navigation.navigate('Home')
+        navigation.navigate('Pets')
     }
 
     let imgShow;
