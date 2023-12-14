@@ -4,7 +4,7 @@ import {View, Text, Pressable, ScrollView, TextInput, StyleSheet, TouchableOpaci
 import * as ImagePicker from "expo-image-picker";
 import DefaultCheckbox from "../../components/inputs/checkboxPadrao";
 import {Controller, useForm} from "react-hook-form";
-import {addDoc, collection} from "firebase/firestore";
+import {addDoc, collection, doc, getDoc} from "firebase/firestore";
 import {auth, fs, st} from "../../config/firebaseConfig";
 import {pet, signup} from "../../styles/global";
 import RadioButtonGroup, {RadioButtonItem} from "expo-radio-button";
@@ -51,7 +51,7 @@ export default function Create({navigation}) {
         uploadBytes(storageRef, blob).then((snapshot) => {
             console.log('Uploaded a blob or file!');
         });
-        navigation.navigate('Home')
+        navigation.navigate('Pets')
     }
 
     let imgShow;

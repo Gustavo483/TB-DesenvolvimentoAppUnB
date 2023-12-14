@@ -10,7 +10,6 @@ import Constants from "expo-constants";
 export default function ShowNotification({navigation}) {
     const [data, setData] = useState([]);
     const [imageUrls, setImageUrls] = useState({});
-
     useEffect(() => {
         const fetchData = async () => {
 
@@ -68,6 +67,8 @@ export default function ShowNotification({navigation}) {
                 });
             }
             console.log('Rotina realizada com sucesso.')
+
+            alert('Adoção recusada !')
         } catch (error) {
             console.error('Erro ao tentar atualizar o documento:', error);
         }
@@ -173,7 +174,8 @@ export default function ShowNotification({navigation}) {
                 await deleteDoc(notificacao);
             }
 
-            console.log('Pet doado com sucesso.')
+            console.log('Pet doado com sucesso!!')
+            alert('Pet doado com sucesso!!')
 
         } catch (error) {
             console.error('Ocorreu um erro na sua solicitação : ', error);

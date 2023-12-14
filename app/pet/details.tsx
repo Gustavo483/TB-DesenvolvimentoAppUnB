@@ -100,7 +100,7 @@ export default function Details({route}) {
             });
 
             console.log('Envio de noticação realizado com sucesso.')
-
+            alert('Foi encaminhado seu pedido de adoção !!')
         }else{
             console.log('Dono do animal não tem pushToken')
         }
