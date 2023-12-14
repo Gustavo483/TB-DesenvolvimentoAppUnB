@@ -30,6 +30,9 @@ export default function ShowNotification({navigation}) {
 
     async function iniciarChat(infoNotification) {
         console.log('Fazer logica para iniciar chat: ',infoNotification)
+        let chatId = infoNotification.IDPets+infoNotification.IDUserDono+infoNotification.IDUserDesejaAdotar
+        console.log(chatId)
+        navigation.navigate('Chat', {'chatId': chatId})
     }
     async function recusarPedidoAdocao(infoNotification){
         try {

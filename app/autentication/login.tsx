@@ -14,7 +14,7 @@ export default function Login({ navigation,setUser }) {
         signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 if (auth.currentUser){
-                    navigation.navigate('Home');
+                    navigation.navigate('Pets');
                 }
             })
             .catch((error) => {
