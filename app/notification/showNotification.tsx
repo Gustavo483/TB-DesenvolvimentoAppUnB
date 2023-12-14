@@ -1,6 +1,6 @@
 import {Image, StyleSheet, Text, View, FlatList, Pressable} from "react-native";
 import React, { useEffect, useState } from 'react';
-import {collection, query, getDocs, where, getDoc} from "firebase/firestore";
+import {collection, query, getDocs, where, getDoc, or} from "firebase/firestore";
 import {fs,auth} from "../../config/firebaseConfig";
 import {getStorage,getDownloadURL, ref } from "@firebase/storage";
 import { doc, updateDoc,deleteDoc } from 'firebase/firestore';
@@ -15,7 +15,11 @@ export default function ShowNotification({navigation}) {
         const fetchData = async () => {
 
             const notificationCollection = collection(fs, 'notification');
-            const q = query(notificationCollection, where('IDUserDono', '==', auth.currentUser.uid));
+            const q = query(notificationCollection,
+                or(
+                    where('IDUserDono', '==', auth.currentUser.uid),
+                    where('IDUserDesejaAdotar', '==', auth.currentUser.uid)
+                ));
             const querySnapshot = await getDocs(q);
 
             const documents = [];
@@ -210,7 +214,7 @@ export default function ShowNotification({navigation}) {
             <View style={styles.flexRow}>
                 <Image source={{ uri: imageUrls[item.id] }} style={styles.animalImage} />
                 <View style={styles.animalDetails}>
-                    <Text style={styles.animalName}>{item.message.body}</Text>
+                    <Text style={styles.animalName}>{item.IDUserDesejaAdotar == auth.currentUser.uid ? "Você tem interesse em adotar " + item.NomePets : item.message.body}</Text>
                 </View>
             </View>
 
@@ -218,12 +222,19 @@ export default function ShowNotification({navigation}) {
                 <Pressable style={[styles.standardButton, styles.submitButton, styles.backgroudYellou]} onPress={async () => {await iniciarChat(item)}}>
                     <Text style={styles.standardButtonText}>Chat</Text>
                 </Pressable>
-                <Pressable style={[styles.standardButton, styles.submitButton, styles.backgroudRed]} onPress={async () => {await recusarPedidoAdocao(item)}}>
-                    <Text style={styles.standardButtonText}>Recusar</Text>
-                </Pressable>
-                <Pressable style={[styles.standardButton, styles.submitButton, styles.backgroudGreen]} onPress={async () => {await aceitarPedidoAdocao(item)}}>
-                    <Text style={styles.standardButtonText}>Aceitar</Text>
-                </Pressable>
+                {item.IDUserDesejaAdotar != auth.currentUser.uid ?
+                    <><Pressable style={[styles.standardButton, styles.submitButton, styles.backgroudRed]}
+                                 onPress={async () => {
+                                     await recusarPedidoAdocao(item);
+                                 }}>
+                        <Text style={styles.standardButtonText}>Recusar</Text>
+                    </Pressable><Pressable style={[styles.standardButton, styles.submitButton, styles.backgroudGreen]}
+                                           onPress={async () => {
+                                               await aceitarPedidoAdocao(item);
+                                           }}>
+                        <Text style={styles.standardButtonText}>Aceitar</Text>
+                    </Pressable></> : null
+                }
             </View>
         </View>
     );
