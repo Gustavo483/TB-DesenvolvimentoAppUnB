@@ -37,10 +37,10 @@ export default function DrawerRoutes() {
                 }}
             />
             <Drawer.Screen
-                name={"Notifies"}
+                name={"Pedidos de adoção"}
                 component={Notification}
                 options={{
-                    drawerLabel: 'Notifies'
+                    drawerLabel: 'Pedidos de adoção'
                 }}
             />
             <Drawer.Screen

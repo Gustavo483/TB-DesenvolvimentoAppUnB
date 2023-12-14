@@ -57,6 +57,7 @@ export default function Details({route}) {
 
             const docSnap = await getDoc(docRef);
 
+            console.log(docSnap.data())
             if (docSnap.exists()) {
                 setUserDono(docSnap.data());
             } else {
@@ -95,9 +96,11 @@ export default function Details({route}) {
                 IDPets: item.id,
                 IDUserDesejaAdotar: auth.currentUser.uid,
                 IDUserDono: item.idDono,
-                message : message
+                message : message,
             });
+
             console.log('Envio de noticação realizado com sucesso.')
+
         }else{
             console.log('Dono do animal não tem pushToken')
         }
