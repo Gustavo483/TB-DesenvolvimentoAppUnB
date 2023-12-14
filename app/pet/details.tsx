@@ -94,6 +94,7 @@ export default function Details({route}) {
             //registrando no firebase a notificação
             const docRef = await addDoc(collection(fs, "notification"), {
                 IDPets: item.id,
+                NomePets: item.nome,
                 IDUserDesejaAdotar: auth.currentUser.uid,
                 IDUserDono: item.idDono,
                 message : message,
